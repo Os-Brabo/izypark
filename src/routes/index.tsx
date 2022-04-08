@@ -6,7 +6,7 @@ export function Routes() {
   return (
     <NavigationContainer>
       <Navigator>
-        <Screen name='Home' component={Home} />
+        <Screen name='Home' component={Home} options={{headerShown:false}} />
       </Navigator>
     </NavigationContainer>
   )
