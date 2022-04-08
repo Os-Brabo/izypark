@@ -2,6 +2,7 @@ import { Text } from "react-native";
 import styled from "styled-components/native";
 import Feather from '@expo/vector-icons/Feather'
 import { getStatusBarHeight } from 'react-native-iphone-x-helper'
+import { Link } from "@react-navigation/native";
 const TopContainer = styled.View`
   background-color: #3A3A3A;
   height: 50%;
