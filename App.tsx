@@ -3,34 +3,27 @@ import * as React from 'react';
 import { Button, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button
-        onPress={() => navigation.navigate('Notifications')}
-        title="Go to notifications"
-      />
-    </View>
-  );
-}
-
-function NotificationsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button onPress={() => navigation.goBack()} title="Go back home" />
-    </View>
-  );
-}
+import { Home } from './src/views/Home';
+import { useFonts, Roboto_400Regular, Roboto_700Bold, Roboto_500Medium } from '@expo-google-fonts/roboto';
+import AppLoading from 'expo-app-loading'
+import { About } from './src/views/About';
 
 const Drawer = createDrawerNavigator();
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Roboto: Roboto_400Regular,
+    RobotoBlack: Roboto_700Bold,
+    RobotoMedium: Roboto_500Medium
+  })
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
   return (
     <NavigationContainer>
       <Drawer.Navigator useLegacyImplementation initialRouteName="Home">
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Notifications" component={NotificationsScreen} />
+        <Drawer.Screen name="Home" component={Home} options={{headerShown:false}} />
+        <Drawer.Screen name="Notifications" component={About} options={{headerShown:false}} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
