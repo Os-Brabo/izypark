@@ -12,7 +12,7 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
   let [fontsLoaded] = useFonts({
-    Roboto: Roboto_400Regular,
+    RobotoRegular: Roboto_400Regular,
     RobotoBlack: Roboto_700Bold,
     RobotoMedium: Roboto_500Medium
   })
