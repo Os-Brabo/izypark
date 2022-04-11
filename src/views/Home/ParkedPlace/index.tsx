@@ -1,5 +1,4 @@
 import React from "react";
-import { Text } from "react-native";
 import { DangerButton } from "../../../components/Buttons/DangerButton";
 import { BlackTitle } from "../../../components/shared/BlackTitle";
 import {CenterText} from './styles'
@@ -12,6 +11,11 @@ interface Props {
   }
 }
 export function ParkedPlace({place}: Props) {
+
+  function handleOutPlace() {
+    console.log('quero sair da vaga')
+  }
+
   return (
     <>
       <BlackTitle
@@ -22,9 +26,8 @@ export function ParkedPlace({place}: Props) {
       <BlackTitle style={{ marginBottom: 10}}>{place.institution}</BlackTitle>
       <CenterText style={{ marginBottom: 10}}>{place.block}</CenterText>
       <CenterText>Desde às {place.parkedAt}</CenterText>
-      <DangerButton>
-        <Text>sair da vaga</Text>
-      </DangerButton>
+      <DangerButton label="sair da vaga" onPress={handleOutPlace} />
+        
     </>
   )
 }
