@@ -1,5 +1,4 @@
 import React from 'react'
-import { RectButton } from 'react-native-gesture-handler'
 import * as S from './styles'
 export function FacebookButton() {
   function handlePress() {

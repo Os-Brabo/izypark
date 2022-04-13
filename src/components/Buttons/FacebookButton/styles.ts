@@ -7,11 +7,12 @@ export const Container = styled(TouchableOpacity)`
   height: 50px;
   width: 100%;
   background-color: #2c71d9;
-  border-radius: 25px;
+  border-radius: 5px;
   padding-left: 30px;
 
   flex-direction: row;
   align-items: center;
+  margin-bottom: 15px;
 `;
 
 export const Icon = styled(FontAwesome)`
