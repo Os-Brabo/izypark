@@ -1,11 +1,11 @@
+import { Link } from '@react-navigation/native'
 import React from 'react'
-import styled from 'styled-components/native'
-import { DefaultButton } from '../../components/Buttons/DefaultButton'
-import { FacebookButton } from '../../components/Buttons/FacebookButton'
-import { GithubButton } from '../../components/Buttons/GithubButton'
-import { GoogleButton } from '../../components/Buttons/GoogleButton'
+import { DefaultButton } from '../../../components/Buttons/DefaultButton'
+import { FacebookButton } from '../../../components/Buttons/FacebookButton'
+import { GithubButton } from '../../../components/Buttons/GithubButton'
+import { GoogleButton } from '../../../components/Buttons/GoogleButton'
 
-import * as S from './styles'
+import * as S from '../styles'
 
 export function Login() {
   function handleSubmint() {
@@ -28,7 +28,8 @@ export function Login() {
         label='continuar' 
         onPress={handleSubmint} />
       <S.CenteredText>
-        Ainda não tem conta? Cadastrar
+        Ainda não tem conta? 
+        <Link to={{screen: 'SignUp'}}>Cadastrar</Link>
       </S.CenteredText>
       <S.CenteredText>
         Ou continue com

@@ -7,7 +7,7 @@ export const Background = styled.View`
   padding: 15px;
 `
 export const LoginTitle = styled.Text`
-  margin-top: 71px;
+  margin-top: 35px;
   text-align: center;
   font-weight: bold;
   font-size: 24px;

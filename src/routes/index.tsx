@@ -4,7 +4,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Home } from "../views/Home";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { About } from "../views/About";
-import { Login } from "../views/Authenticate/Login";
+import { Login } from "../views/publicViews/Authenticate/Login";
+import { View } from "react-native";
+import { SignUp } from "../views/publicViews/SignUp";
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
 export function Routes() {
@@ -19,8 +21,13 @@ export function Routes() {
       </Drawer.Navigator>
      ):(
       <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={Login} options={{headerShown:false}} />
-        <Stack.Screen name="SignUp" component={Login} options={{headerShown:false}} />
+        <Stack.Screen name="Login" component={Login} options={{
+          headerBackground: () => (<View/>),
+          headerTitle: ''
+        }} />
+        <Stack.Screen name="SignUp" component={SignUp} options={{
+          headerTitle: ''
+        }} />
       </Stack.Navigator>
      )}
     </NavigationContainer>
