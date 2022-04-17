@@ -1,5 +1,5 @@
 import React from "react"
-import Yup from "yup"
+import * as Yup from "yup"
 import { Formik } from "formik"
 import { DefaultButton } from "../../../components/Buttons/DefaultButton"
 import { FacebookButton } from "../../../components/Buttons/FacebookButton"
@@ -31,7 +31,10 @@ export function SignUp() {
   return (
     <S.Background>
       <S.LoginTitle>Cadastrar</S.LoginTitle>
-      <Formik initialValues={initalValues} onSubmit={handleSubmit}>
+      <Formik 
+        initialValues={initalValues} 
+        onSubmit={handleSubmit} 
+        validationSchema={signUpSchema}>
         <S.FieldContainer>
           <S.FieldLabel>E-mail</S.FieldLabel>
           <S.FieldInput />
