@@ -6,7 +6,8 @@ import { FacebookButton } from "../../../components/Buttons/FacebookButton"
 import { GithubButton } from "../../../components/Buttons/GithubButton"
 import { GoogleButton } from "../../../components/Buttons/GoogleButton"
 import * as S from '../styles'
-import { Text, View } from "react-native"
+import { KeyboardAvoidingView, Platform, SafeAreaView, Text, View } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
 
 const signUpSchema = Yup.object().shape({
   email: Yup.string().required(),
@@ -33,60 +34,68 @@ export function SignUp() {
   }
   return (
     <S.Background>
-      <S.LoginTitle>Cadastrar</S.LoginTitle>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={signUpSchema}
-        onSubmit={values => console.log(values)}>
-        {({handleSubmit, handleChange, handleBlur, values, errors}) => (
-          <View>
-            <S.FieldContainer>
-              <S.FieldLabel>E-mail</S.FieldLabel>
-              <S.FieldInput
-                value={values.email}
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                placeholder="Digite seu e-mail"
-              />
-              <Text>{errors.email}</Text>
-            </S.FieldContainer>
-            <S.FieldContainer>
-              <S.FieldLabel>Senha</S.FieldLabel>
-              <S.FieldInput
-                value={values.password}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                placeholder="Digite sua senha"
-                secureTextEntry
-              />
-               <Text>{errors.password}</Text>
-            </S.FieldContainer>
-            <S.FieldContainer>
-              <S.FieldLabel>Confirmar Senha</S.FieldLabel>
-              <S.FieldInput
-                value={values.passwordConfirmation}
-                onChangeText={handleChange('passwordConfirmation')}
-                onBlur={handleBlur('passwordConfirmation')}
-                placeholder="Repetir senha"
-                secureTextEntry
-              />
-               <Text>{errors.passwordConfirmation}</Text>
-            </S.FieldContainer>
-            <DefaultButton
-              label='continuar' 
-              onPress={handleSubmit} />
-          </View>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView>
+          <S.LoginTitle>Cadastrar</S.LoginTitle>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={signUpSchema}
+            onSubmit={values => console.log(values)}>
+            {({handleSubmit, handleChange, handleBlur, values, errors}) => (
+              <View>
+                <S.FieldContainer>
+                  <S.FieldLabel>E-mail</S.FieldLabel>
+                  <S.FieldInput
+                    value={values.email}
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
+                    placeholder="Digite seu e-mail"
+                  />
+                  <Text>{errors.email}</Text>
+                </S.FieldContainer>
+                <S.FieldContainer>
+                  <S.FieldLabel>Senha</S.FieldLabel>
+                  <S.FieldInput
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                    placeholder="Digite sua senha"
+                    secureTextEntry
+                  />
+                  <Text>{errors.password}</Text>
+                </S.FieldContainer>
+                <S.FieldContainer>
+                  <S.FieldLabel>Confirmar Senha</S.FieldLabel>
+                  <S.FieldInput
+                    value={values.passwordConfirmation}
+                    onChangeText={handleChange('passwordConfirmation')}
+                    onBlur={handleBlur('passwordConfirmation')}
+                    placeholder="Repetir senha"
+                    secureTextEntry
+                  />
+                  <Text>{errors.passwordConfirmation}</Text>
+                </S.FieldContainer>
+                <DefaultButton
+                  label='continuar' 
+                  onPress={handleSubmit} />
+              </View>
 
-        )}
+            )}
 
-      </Formik>
-      
-      <S.CenteredText>
-        Ou continue com
-      </S.CenteredText>
-      <FacebookButton />
-      <GoogleButton />
-      <GithubButton />
+          </Formik>
+          
+          <S.CenteredText>
+            Ou continue com
+          </S.CenteredText>
+          <FacebookButton />
+          <GoogleButton />
+          <GithubButton />
+
+        </ScrollView>
+      </KeyboardAvoidingView>
       
         
     </S.Background> 
