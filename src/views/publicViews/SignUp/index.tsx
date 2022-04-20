@@ -6,10 +6,10 @@ import { FacebookButton } from "../../../components/Buttons/FacebookButton"
 import { GithubButton } from "../../../components/Buttons/GithubButton"
 import { GoogleButton } from "../../../components/Buttons/GoogleButton"
 import * as S from '../styles'
-import { View } from "react-native"
+import { Text, View } from "react-native"
 
 const signUpSchema = Yup.object().shape({
-  email: Yup.string().email('Email Inválido').required(),
+  email: Yup.string().required(),
   password: Yup.string()
     .min(6, 'Min 6 characters')
     .max(20, 'Max 20 characters')
@@ -20,14 +20,16 @@ const signUpSchema = Yup.object().shape({
     .oneOf([Yup.ref('password'), null], 'Passwords must match')
     .required(),
 })
+
 export function SignUp() {
   const initialValues = {
     email: '',
     password: '',
-    confirmPassword: '',
+    passwordConfirmation: '',
   }
-  function handleSubmit() {
-
+  function handleSuccessSubmit(values: any) {
+    console.log('000 values');
+    console.log(values)
   }
   return (
     <S.Background>
@@ -35,24 +37,47 @@ export function SignUp() {
       <Formik
         initialValues={initialValues}
         validationSchema={signUpSchema}
-        onSubmit={handleSubmit}>
-        <View>
-          <S.FieldContainer>
-            <S.FieldLabel>E-mail</S.FieldLabel>
-            <S.FieldInput />
-          </S.FieldContainer>
-          <S.FieldContainer>
-            <S.FieldLabel>Senha</S.FieldLabel>
-            <S.FieldInput />
-          </S.FieldContainer>
-          <S.FieldContainer>
-            <S.FieldLabel>Confirmar Senha</S.FieldLabel>
-            <S.FieldInput />
-          </S.FieldContainer>
-          <DefaultButton
-            label='continuar' 
-            onPress={handleSubmit} />
-        </View>
+        onSubmit={values => console.log(values)}>
+        {({handleSubmit, handleChange, handleBlur, values, errors}) => (
+          <View>
+            <S.FieldContainer>
+              <S.FieldLabel>E-mail</S.FieldLabel>
+              <S.FieldInput
+                value={values.email}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                placeholder="Digite seu e-mail"
+              />
+              <Text>{errors.email}</Text>
+            </S.FieldContainer>
+            <S.FieldContainer>
+              <S.FieldLabel>Senha</S.FieldLabel>
+              <S.FieldInput
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                placeholder="Digite sua senha"
+                secureTextEntry
+              />
+               <Text>{errors.password}</Text>
+            </S.FieldContainer>
+            <S.FieldContainer>
+              <S.FieldLabel>Confirmar Senha</S.FieldLabel>
+              <S.FieldInput
+                value={values.passwordConfirmation}
+                onChangeText={handleChange('passwordConfirmation')}
+                onBlur={handleBlur('passwordConfirmation')}
+                placeholder="Repetir senha"
+                secureTextEntry
+              />
+               <Text>{errors.passwordConfirmation}</Text>
+            </S.FieldContainer>
+            <DefaultButton
+              label='continuar' 
+              onPress={handleSubmit} />
+          </View>
+
+        )}
 
       </Formik>
       

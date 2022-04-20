@@ -10,16 +10,16 @@ export const Background = styled.View`
   padding: 15px;
 `
 export const LoginTitle = styled.Text`
-  margin-top: 35px;
+  margin-top: 25px;
   text-align: center;
   font-weight: bold;
   font-size: 24px;
   font-family: 'RobotoBlack';
-  margin-bottom: 55px;
+  margin-bottom: 25px;
 `
 export const FieldContainer = styled.View`
   width: 290px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 `
 export const FieldLabel = styled.Text`
   font-size: 14px;
@@ -31,6 +31,7 @@ export const FieldInput = styled.TextInput<InputProps>`
   height: 40px;
   border-radius: 5px;
   border: 1px solid #3A3A3A;
+  padding: 10px 12px;
   border-color: ${(props) => (props.hasError ? 'red' : '#3a3a3a')};
 `
 export const CenteredText = styled.Text`
