@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React, {useState} from "react";
 import { useEffect } from "react";
 import { FlatList, Text } from "react-native";
@@ -14,6 +15,11 @@ type VehicleData = {
 }
 
 export function Vehicles() {
+  const navigation = useNavigation()
+  function handleRouteRedirect() {
+    navigation.navigate({name:'Vehicles.Create'})
+  }
+  
   const [vehicles, setVehicles] = useState<VehicleData[]>([]);
   useEffect(() => {
     setVehicles([
@@ -42,7 +48,7 @@ export function Vehicles() {
                 />
               )}
       />
-      <DefaultButton label="Adicionar novo Veículo" onPress={() => {}} />
+      <DefaultButton label="Adicionar novo Veículo" onPress={handleRouteRedirect} />
     </>
   );
 }

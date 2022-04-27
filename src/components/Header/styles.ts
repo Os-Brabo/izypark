@@ -8,7 +8,10 @@ export const HeaderContainer = styled.View`
   width: 100%;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   background-color: #3A3A3A;
   margin-bottom: 33px;
+`
+export const MenuButton = styled.TouchableOpacity`
+  margin-left: auto;
 `
