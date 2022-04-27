@@ -5,8 +5,6 @@ const TopContainer = styled.View`
   background-color: #3A3A3A;
   height: 50%;
   width: 100%;
-  padding: 15px;
-  padding-top: ${getStatusBarHeight() + 22}px;
 `
 const DefaultTitle = styled.Text`
   font-size: 50px;
