@@ -10,4 +10,5 @@ export const HeaderContainer = styled.View`
   align-items: center;
   justify-content: center;
   background-color: #3A3A3A;
+  margin-bottom: 33px;
 `

@@ -15,7 +15,6 @@ const DefaultTitle = styled.Text`
 `
 const CO2Container = styled.View`
   width: 100%;
-  margin-top: 30px;
 `
 const CO2Description = styled.Text`
   font-size: 24px;
