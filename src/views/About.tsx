@@ -1,3 +1,4 @@
+import React from "react";
 import { Text } from "react-native";
 import styled from "styled-components/native";
 import Feather from '@expo/vector-icons/Feather'

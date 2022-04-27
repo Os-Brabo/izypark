@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { AuthProvider } from "../contexts/AuthContext";
 import { ToasterProvider } from "./Toaster";
 
 interface Props {
@@ -7,7 +8,9 @@ interface Props {
 export function AppProvider({ children }: Props) {
   return (
     <ToasterProvider>
-      {children}
+      <AuthProvider>
+        {children}
+      </AuthProvider>
     </ToasterProvider>
   )
 }
