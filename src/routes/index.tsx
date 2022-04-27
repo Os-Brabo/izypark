@@ -1,13 +1,16 @@
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Home } from "../views/Home";
-const {Navigator, Screen} = createNativeStackNavigator()
+import { PublicRoutes } from "./PublicRoutes";
+import { PrivateRoutes } from "./PrivateRoutes";
+
+const Stack = createNativeStackNavigator()
 export function Routes() {
+  const isAuthenticated = true
+  
   return (
     <NavigationContainer>
-      <Navigator>
-        <Screen name='Home' component={Home} options={{headerShown:false}} />
-      </Navigator>
+      { isAuthenticated ? <PrivateRoutes /> : <PublicRoutes /> }
     </NavigationContainer>
   )
 }
