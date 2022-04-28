@@ -1,12 +1,12 @@
+import { useNavigation } from "@react-navigation/native";
 import React, {useState} from "react";
 import { useEffect } from "react";
 import { DefaultButton } from "../../components/Buttons/DefaultButton";
 import { Header } from "../../components/Header";
 import { BlackTitle } from "../../components/shared/BlackTitle";
 import { Vehicle } from "../../components/Vehicles/Vehicle";
-import { redirectTo } from "../../utils/redirectToRoute";
 import * as S from './styles'
-export type VehicleData = {
+type VehicleData = {
   id: string
   carPlate: string
   carModel: string
@@ -14,6 +14,11 @@ export type VehicleData = {
 }
 
 export function Vehicles() {
+  const navigation = useNavigation()
+  function handleRouteRedirect() {
+    navigation.navigate('Vehicles.Create')
+  }
+  
   const [vehicles, setVehicles] = useState<VehicleData[]>([]);
   useEffect(() => {
     setVehicles([
@@ -42,9 +47,7 @@ export function Vehicles() {
                 />
               )}
       />
-      <DefaultButton
-        label="Adicionar novo Veículo"
-        onPress={() => { redirectTo('Vehicles.Create') }} />
+      <DefaultButton label="Adicionar novo Veículo" onPress={handleRouteRedirect} />
     </>
   );
 }
