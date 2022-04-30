@@ -7,6 +7,7 @@ export function CreateVehicle() {
     <View>
       <Header returnTo="Vehicles" />
       <BlackTitle>Cadastrar um Veículo</BlackTitle>
+      
     </View>
   )
 }

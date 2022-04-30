@@ -8,13 +8,13 @@ import { KeyboardAvoidingView, Platform, Text, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import { useAuth } from "../../../hooks/useAuth"
 import { SignUpForm } from "../../../components/SignUpForm"
+import { Either } from "../../../utils/Either"
 
 export function SignUp() {
   const {signUpWithPassword} = useAuth()
-  async function onSubmit({ email, password }: { email: string, password: string }) {
+  async function onSubmit({ email, password }: { email: string, password: string }):Promise<Either<Error, null>> {
     console.log('submiting');
-    const response = await signUpWithPassword({ email, password })
-    console.log(response)
+    return await signUpWithPassword({ email, password })
   }
   return (
     <S.Background>

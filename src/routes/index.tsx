@@ -6,7 +6,7 @@ import { PrivateRoutes } from "./PrivateRoutes";
 
 const Stack = createNativeStackNavigator()
 export function Routes() {
-  const isAuthenticated = true
+  const isAuthenticated = false
   
   return (
     <NavigationContainer>
