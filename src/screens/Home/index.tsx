@@ -1,41 +1,39 @@
 import React from "react";
-import { Header } from '../../components/Header'
+import { Header } from "../../components/Header";
 import { BlackTitle } from "../../components/shared/BlackTitle";
+import { ListInstitutions } from "./ListInstitutions";
 import { ParkedPlace } from "./ParkedPlace";
-import {styles} from './styles'
-
+import * as S from "./styles";
 
 export function Home() {
-  const economizedGaz = 128.18
-  const availableCoins = 35
-  const parkedPlace = {
-    institution: 'Facens',
-    block: 'Bloco A',
-    parkedAt: '10:00',
-  }
-  return(
+  const economizedGaz = 128.18;
+  const availableCoins = 35;
+  const parkedPlace = null;
+  /**
+   * {
+    institution: "Facens",
+    block: "Bloco A",
+    parkedAt: "10:00"
+  };
+   */
+  return (
     <>
-      <styles.TopContainer>
+      <S.TopContainer>
         <Header />
-        <styles.CO2Container>
-          <styles.DefaultTitle >{economizedGaz}</styles.DefaultTitle>
-          <styles.CO2Description>
-            Gramas de CO2 economizados
-          </styles.CO2Description>
-        </styles.CO2Container>
-        <styles.DefaultTitle>{availableCoins}</styles.DefaultTitle>
-        <styles.AvailableCoins>Moedas Disponíveis</styles.AvailableCoins>
-      </styles.TopContainer>
-      <styles.BottomContainer>
-        {
-          !parkedPlace 
-          ? 
-            <BlackTitle>Instituições</BlackTitle> 
-          :   
-            <ParkedPlace place={parkedPlace} />
-        }
-        
-      </styles.BottomContainer>
+        <S.CO2Container>
+          <S.DefaultTitle>{economizedGaz}</S.DefaultTitle>
+          <S.CO2Description>Gramas de CO2 economizados</S.CO2Description>
+        </S.CO2Container>
+        <S.DefaultTitle>{availableCoins}</S.DefaultTitle>
+        <S.AvailableCoins>Moedas Disponíveis</S.AvailableCoins>
+      </S.TopContainer>
+      <S.BottomContainer>
+        {!parkedPlace ? (
+          <ListInstitutions />
+        ) : (
+          <ParkedPlace place={parkedPlace} />
+        )}
+      </S.BottomContainer>
     </>
-  )
+  );
 }

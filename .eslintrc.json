@@ -37,7 +37,8 @@
         "skip": [
           "BlackTitle",
           "S.TextWithStrong",
-          "FieldLabel"
+          "FieldLabel",
+          "S.*"
         ]
       }
     ],
