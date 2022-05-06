@@ -36,7 +36,7 @@
       {
         "skip": [
           "BlackTitle",
-          "BodyText.Text.Text"
+          "S.TextWithStrong"
         ]
       }
     ],
