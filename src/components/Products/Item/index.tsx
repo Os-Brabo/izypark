@@ -10,19 +10,19 @@ export type ItemPurchased = {
   title: string;
   description: string;
   status: "awaiting_purchase" | "delivered";
-}
+};
 
 interface Props {
   data: ItemPurchased;
 }
-export function Item({data}: Props) {
+export function Item({ data }: Props) {
   return (
     <S.ItemContainer>
       <S.ItemBody>
         <S.ItemImage source={{ uri: data.imageUrl }} />
         <S.ItemBodyContent>
-          <S.ItemTitle>{ data.title }</S.ItemTitle>
-          <S.ItemDescription>{ data.description }</S.ItemDescription>
+          <S.ItemTitle>{data.title}</S.ItemTitle>
+          <S.ItemDescription>{data.description}</S.ItemDescription>
         </S.ItemBodyContent>
       </S.ItemBody>
       <S.ItemFooter>
@@ -44,12 +44,18 @@ export function Item({data}: Props) {
         </S.Row>
         <Spacer height={12} />
         <S.Row>
-          <S.TextWithStrong textColor={data.status === "awaiting_purchase" ? "#FFA36F" : "#5BC873"}>
+          <S.TextWithStrong
+            textColor={
+              data.status === "awaiting_purchase" ? "#FFA36F" : "#5BC873"
+            }
+          >
             <Text style={{ fontWeight: "bold" }}>Status: </Text>
-            {data.status === "awaiting_purchase" ? "Aguardando Retirada" : "Entregue"}
+            {data.status === "awaiting_purchase"
+              ? "Aguardando Retirada"
+              : "Entregue"}
           </S.TextWithStrong>
         </S.Row>
       </S.ItemFooter>
     </S.ItemContainer>
-  )
+  );
 }
