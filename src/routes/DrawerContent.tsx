@@ -3,6 +3,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Home } from "../screens/Home";
 import { Vehicles } from "../screens/MyVehicles";
 import { Store } from "../screens/Store";
+import { Raking } from "../screens/Raking";
 const Drawer = createDrawerNavigator();
 export function DrawerContent() {
   return (
@@ -21,6 +22,11 @@ export function DrawerContent() {
         name="Shop"
         component={Store}
         options={{ title: "Loja", headerShown: false }}
+      />
+      <Drawer.Screen
+        name="Ranking"
+        component={Raking}
+        options={{ headerShown: false }}
       />
     </Drawer.Navigator>
   );
