@@ -2,6 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { DrawerContent } from "./DrawerContent";
 import { CreateVehicle } from "../screens/AddVehicle";
+import { Institutions } from "../screens/Institutions";
 const Stack = createNativeStackNavigator();
 
 export function PrivateRoutes() {
@@ -15,6 +16,11 @@ export function PrivateRoutes() {
       <Stack.Screen
         name="Vehicles.Create"
         component={CreateVehicle}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Institutions.List"
+        component={Institutions}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
@@ -11,6 +12,7 @@ interface Institution {
   id: string;
 }
 export function ListInstitutions() {
+  const navigation = useNavigation();
   const favoriteInstitutions: Institution[] = [
     { title: "Facens", id: "1" },
     { title: "Uniso", id: "12" },
@@ -19,7 +21,9 @@ export function ListInstitutions() {
     { title: "Estádio Pacaembu", id: "32" },
     { title: "Estádio Pacaembu", id: "33" }
   ];
-  function handleAddInstitution() {}
+  function handleGetInstitutions() {
+    navigation.navigate("Institutions.List");
+  }
   return (
     <S.InstitutionsContainer>
       <View style={{ flex: 1 }}>
@@ -33,7 +37,7 @@ export function ListInstitutions() {
         />
       </View>
 
-      <DefaultButton label="Ver instituições" onPress={handleAddInstitution} />
+      <DefaultButton label="Ver instituições" onPress={handleGetInstitutions} />
     </S.InstitutionsContainer>
   );
 }
