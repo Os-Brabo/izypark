@@ -9,14 +9,7 @@ export const Background = styled.View`
   align-items: center;
   padding: 15px;
 `;
-export const LoginTitle = styled.Text`
-  margin-top: 25px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 24px;
-  font-family: "RobotoBlack";
-  margin-bottom: 25px;
-`;
+
 export const FieldContainer = styled.View`
   width: 290px;
   margin-bottom: 10px;
