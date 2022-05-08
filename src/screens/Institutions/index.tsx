@@ -9,7 +9,7 @@ export function Institutions() {
   return (
     <>
       <Header returnTo="Home" />
-      <BlackTitle>Buscar Estacionamento</BlackTitle>
+      <BlackTitle>Buscar Instituição</BlackTitle>
       <FieldContainer>
         <FieldLabel>Instituição</FieldLabel>
         <FieldInput />
