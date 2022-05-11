@@ -9,7 +9,7 @@ import { Institution, InstitutionItem } from "./InstitutionItem";
 
 export function Institutions() {
   const institutions: Institution[] = [
-    { id: "1", name: "Institution 1", isFavorite: false },
+    { id: "1", name: "Institution 1 com um texto grande", isFavorite: false },
     { id: "2", name: "Institution 2", isFavorite: true },
     { id: "3", name: "Institution 3", isFavorite: true },
     { id: "4", name: "Institution 4", isFavorite: false }

@@ -31,7 +31,7 @@ export function InstitutionItem({ institution }: Props) {
           />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Feather name="info" size={iconSize} color="black" />
+          <Feather name="info" size={iconSize} color="#3af" />
         </TouchableOpacity>
       </S.Actions>
     </S.Container>
