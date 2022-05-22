@@ -13,7 +13,10 @@ export function Block({ block }: Props) {
   return (
     <S.Container>
       <S.Title>{block.name}</S.Title>
-      <S.Vacancies>
+      <S.Vacancies
+        vacancies={block.vacancies}
+        availableNow={block.availableNow}
+      >
         <S.VacanciesAmount>{block.availableNow}</S.VacanciesAmount>
         <S.VacanciestTotal>{totalVacancies}</S.VacanciestTotal>
       </S.Vacancies>

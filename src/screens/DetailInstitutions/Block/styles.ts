@@ -1,5 +1,16 @@
 import styled from "styled-components/native";
 
+interface VacanciesProps {
+  vacancies: number;
+  availableNow: number;
+}
+
+const handleColorType = (amount: number) => {
+  if (amount <= 5) return "#5BC873";
+  if (amount <= 15) return "#ffc107";
+  return "#f44336";
+};
+
 export const Container = styled.View`
   background-color: #3a3a3a;
   border-radius: 8px;
@@ -19,12 +30,14 @@ export const Title = styled.Text`
   margin-left: 26px;
 `;
 
-export const Vacancies = styled.View`
+export const Vacancies = styled.View<VacanciesProps>`
   height: 100%;
   /* border-top-right-radius: 5px;
   border-bottom-right-radius: 5px; */
   flex-basis: 30%;
-  background-color: #ff323a;
+  /* background-color: #ff323a; */
+  /* background-color: : ${({ vacancies }) => handleColorType(vacancies)}; */
+  background-color: ${(props) => handleColorType(props.availableNow)};
   flex-direction: row;
   align-items: center;
   justify-content: center;

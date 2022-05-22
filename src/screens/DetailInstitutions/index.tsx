@@ -26,6 +26,20 @@ export function DetailInstitutions() {
         createdAt: new Date(),
         availableNow: 1,
         vacancies: 5
+      },
+      {
+        id: "2",
+        name: "Bloco B",
+        createdAt: new Date(),
+        availableNow: 15,
+        vacancies: 30
+      },
+      {
+        id: "3",
+        name: "Bloco C",
+        createdAt: new Date(),
+        availableNow: 18,
+        vacancies: 20
       }
     ]
   };
@@ -39,6 +53,7 @@ export function DetailInstitutions() {
       <FlatList
         data={institution.parkingBlocks}
         style={{ padding: 15 }}
+        ItemSeparatorComponent={() => <Spacer height={15} />}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <Block block={item} />}
       />
