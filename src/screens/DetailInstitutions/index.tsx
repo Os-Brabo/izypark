@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, FlatList } from "react-native";
 import { DefaultButton } from "../../components/Buttons/DefaultButton";
 import { Header } from "../../components/Header";
+import { CenterBoldText } from "../../components/shared/Atoms";
 import { BlackTitle } from "../../components/shared/BlackTitle";
 import { Spacer } from "../../components/shared/Spacer";
 import { Block } from "./Block";
@@ -70,7 +71,9 @@ export function DetailInstitutions() {
       <Header />
       <BlackTitle>{institution.title}</BlackTitle>
       <BlackTitle>Vagas disponíveis por bloco</BlackTitle>
-      <Text>Após estacionar, selecione o bloco onde parou</Text>
+      <CenterBoldText>
+        Após estacionar, selecione o bloco onde parou
+      </CenterBoldText>
       <Spacer height={15} />
       <FlatList
         data={institution.parkingBlocks}
@@ -82,7 +85,7 @@ export function DetailInstitutions() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <Block block={item} />}
       />
-      <View style={{ flexBasis: "20%" }}>
+      <View style={{ flexBasis: "25%" }}>
         <DefaultButton label="loja da instituição" onPress={() => { }} />
         <DefaultButton label="loja da instituição" onPress={() => { }} />
       </View>
