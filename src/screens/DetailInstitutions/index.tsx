@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, FlatList } from "react-native";
+import { DefaultButton } from "../../components/Buttons/DefaultButton";
 import { Header } from "../../components/Header";
 import { BlackTitle } from "../../components/shared/BlackTitle";
 import { Spacer } from "../../components/shared/Spacer";
@@ -40,23 +41,51 @@ export function DetailInstitutions() {
         createdAt: new Date(),
         availableNow: 18,
         vacancies: 20
+      },
+      {
+        id: "4",
+        name: "Bloco C",
+        createdAt: new Date(),
+        availableNow: 18,
+        vacancies: 20
+      },
+      {
+        id: "5",
+        name: "Bloco C",
+        createdAt: new Date(),
+        availableNow: 18,
+        vacancies: 20
+      },
+      {
+        id: "6",
+        name: "Bloco j",
+        createdAt: new Date(),
+        availableNow: 18,
+        vacancies: 20
       }
     ]
   };
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Header />
       <BlackTitle>{institution.title}</BlackTitle>
       <BlackTitle>Vagas disponíveis por bloco</BlackTitle>
       <Text>Após estacionar, selecione o bloco onde parou</Text>
-      <Spacer height={25} />
+      <Spacer height={15} />
       <FlatList
         data={institution.parkingBlocks}
-        style={{ padding: 15 }}
-        ItemSeparatorComponent={() => <Spacer height={15} />}
+        style={{
+          elevation: 12,
+          paddingHorizontal: 15
+        }}
+        ItemSeparatorComponent={() => <Spacer height={10} />}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <Block block={item} />}
       />
+      <View style={{ flexBasis: "20%" }}>
+        <DefaultButton label="loja da instituição" onPress={() => { }} />
+        <DefaultButton label="loja da instituição" onPress={() => { }} />
+      </View>
     </View>
   );
 }
