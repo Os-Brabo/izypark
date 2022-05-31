@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import { AuthProvider } from "../contexts/AuthContext";
+import { VehicleProvider } from "../contexts/VehicleContext";
 import { ToasterProvider } from "./Toaster";
 
 interface Props {
@@ -9,8 +10,8 @@ export function AppProvider({ children }: Props) {
   return (
     <ToasterProvider>
       <AuthProvider>
-        {children}
+        <VehicleProvider>{children}</VehicleProvider>
       </AuthProvider>
     </ToasterProvider>
-  )
+  );
 }
