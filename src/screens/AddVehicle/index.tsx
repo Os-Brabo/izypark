@@ -5,6 +5,8 @@ import { View } from "react-native";
 import { DefaultButton } from "../../components/Buttons/DefaultButton";
 import { Header } from "../../components/Header";
 import { BlackTitle } from "../../components/shared/BlackTitle";
+import { initializeApp } from "firebase/app";
+import { getFirestore, setDoc, doc } from "firebase/firestore";
 import {
   FieldContainer,
   FieldInput,

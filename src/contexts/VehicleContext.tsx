@@ -1,9 +1,13 @@
 import React, { createContext, PropsWithChildren, useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
+// Add this line to your `index.js`
+import "react-native-get-random-values";
 import { v4 as uuid } from "uuid";
 import { useAuth } from "../hooks/useAuth";
-import { firestore } from "../services/firesotre";
+
 import { Either, left, right } from "../utils/Either";
+
+import { initializeApp } from "firebase/app";
 
 type Vehicle = {
   id: string;
@@ -33,11 +37,18 @@ export function VehicleProvider({ children }: PropsWithChildren<{}>) {
   ): Promise<Either<Error, null>> {
     console.log("vehicle user");
     const id = uuid();
+    const firestore = getFirestore();
     try {
-      const institutionDocRef = doc(firestore, "car", id);
-      await setDoc(institutionDocRef, { ...data, userId: user?.uid });
-      // const institutionDocRef = doc(firestore, 'institutions', id)
-      // await setDoc(institutionDocRef, { ...fields, userId: user?.uid })
+      const vehicleDocRef = doc(firestore, "cars", id);
+      console.log(user?.uid);
+      await setDoc(vehicleDocRef, { ...data, userId: user?.uid });
+      // // const institutionDocRef = doc(firestore, 'institutions', id)
+      // // await setDoc(institutionDocRef, { ...fields, userId: user?.uid })
+      // await setDoc(doc(firestore, "characters", "mario"), {
+      //   employment: "plumber",
+      //   outfitColor: "red",
+      //   specialAttack: "fireball"
+      // });
       return right(null);
     } catch (error: any) {
       console.log("err", error);
