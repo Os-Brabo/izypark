@@ -1,5 +1,7 @@
 import { Formik } from "formik";
 import { View } from "react-native";
+import { useToaster } from "../../hooks/Toaster";
+import { useAuth } from "../../hooks/useAuth";
 import { DefaultButton } from "../Buttons/DefaultButton";
 import { FieldContainer, FieldInput, FieldLabel } from "../shared/Form/styles";
 
@@ -8,12 +10,19 @@ interface Credentials {
   password: string;
 }
 export function SignInForm() {
+  const { signInWithPassword } = useAuth();
+  const toast = useToaster();
   const initialValues: Credentials = {
     email: "",
     password: ""
   };
-  function submit(data: Credentials) {
-    console.log(data);
+  async function submit({ email, password }: Credentials) {
+    const response = await signInWithPassword({ email, password });
+    if (response.isLeft()) {
+      console.log(response.value);
+      return;
+    }
+    toast.showToaster("Cadastro realizado com sucesso!", 400);
   }
   return (
     <Formik initialValues={initialValues} onSubmit={submit}>
