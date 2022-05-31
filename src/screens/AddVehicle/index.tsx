@@ -15,6 +15,7 @@ import {
 } from "../../components/shared/Form/styles";
 import { useVehicle } from "../../hooks/useVehicle";
 import { useToaster } from "../../hooks/Toaster";
+import { useNavigation } from "@react-navigation/native";
 // import * as S from "";
 
 const createVehicleSchema = Yup.object().shape({
@@ -33,6 +34,7 @@ interface Fields {
 
 export function CreateVehicle() {
   const toast = useToaster();
+  const navigation = useNavigation();
   const { create } = useVehicle();
 
   const initialValues = {
@@ -48,6 +50,7 @@ export function CreateVehicle() {
       return;
     }
     toast.showToaster("Cadastro realizado com sucesso!", 400);
+    navigation.navigate("Vehicles");
   }
 
   return (

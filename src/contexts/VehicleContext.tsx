@@ -1,5 +1,18 @@
-import React, { createContext, PropsWithChildren, useState } from "react";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import React, {
+  createContext,
+  PropsWithChildren,
+  useEffect,
+  useState
+} from "react";
+import {
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  query,
+  setDoc,
+  where
+} from "firebase/firestore";
 // Add this line to your `index.js`
 import "react-native-get-random-values";
 import { v4 as uuid } from "uuid";
@@ -16,12 +29,12 @@ type Vehicle = {
   plate: string;
 };
 
-type CreateVehicleFields = Omit<Vehicle, "id">;
+type VehicleFields = Omit<Vehicle, "id">;
 
 type VehicleContextProps = {
   isLoading: boolean;
   data?: Vehicle[];
-  create: (fields: CreateVehicleFields) => Promise<Either<Error, null>>;
+  create: (fields: VehicleFields) => Promise<Either<Error, null>>;
 };
 
 export const VehicleContext = createContext({} as VehicleContextProps);
@@ -31,13 +44,11 @@ export function VehicleProvider({ children }: PropsWithChildren<{}>) {
   const { user } = useAuth();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const firestore = getFirestore();
 
-  async function create(
-    data: CreateVehicleFields
-  ): Promise<Either<Error, null>> {
+  async function create(data: VehicleFields): Promise<Either<Error, null>> {
     console.log("vehicle user");
     const id = uuid();
-    const firestore = getFirestore();
     try {
       const vehicleDocRef = doc(firestore, "cars", id);
       console.log(user?.uid);
@@ -56,6 +67,19 @@ export function VehicleProvider({ children }: PropsWithChildren<{}>) {
     }
     // setInstitution({ id, ...fields })
   }
+  async function fetchVehicles() {
+    const vehiclesRef = collection(firestore, "cars");
+    const q = query(vehiclesRef, where("userId", "==", user?.uid));
+    const result = await getDocs(q);
+    const data: Vehicle[] = [];
+    result.forEach((doc) => {
+      data.push({ id: doc.id, ...doc.data() } as Vehicle);
+    });
+    setVehicles(data);
+  }
+  useEffect(() => {
+    fetchVehicles();
+  }, []);
 
   const value = {
     isLoading,
