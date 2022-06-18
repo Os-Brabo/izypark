@@ -51,6 +51,7 @@ export function VehicleProvider({ children }: PropsWithChildren<{}>) {
       const vehicleDocRef = doc(firestore, "cars", id);
       console.log(user?.uid);
       await setDoc(vehicleDocRef, { ...data, userId: user?.uid });
+      setVehicles([...vehicles, { ...data, id }]);
       return right(null);
     } catch (error: any) {
       console.log("err", error);
