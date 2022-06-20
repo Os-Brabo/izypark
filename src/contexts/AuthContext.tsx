@@ -6,6 +6,16 @@ import {
   onAuthStateChanged,
   User as FirebaseUser
 } from "firebase/auth";
+import {
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  query,
+  setDoc,
+  Unsubscribe,
+  where
+} from "firebase/firestore";
 import React, {
   createContext,
   ReactNode,
@@ -16,6 +26,12 @@ import React, {
 } from "react";
 
 import { Either, left, right } from "../utils/Either";
+import { createUuid } from "../utils/gererateUuid";
+
+type UserData = {
+  email: string;
+  favoriteInstitutions: string[];
+};
 
 type PasswordSignProps = {
   email: string;
@@ -41,9 +57,38 @@ export function AuthProvider({ children }: ProviderProps) {
   const auth = getAuth();
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const firestore = getFirestore();
+  // let unsubscribe: Unsubscribe;
+
+  async function createUserData(userEmail: string) {
+    console.log("createUserData");
+    try {
+      const userDocRef = doc(firestore, "usersData", createUuid());
+      const userInitialData = {
+        email: userEmail,
+        favoriteInstitutions: [],
+        parkedAt: null
+      };
+      await setDoc(userDocRef, userInitialData);
+      setUserData(userInitialData);
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
+  async function generateUserData(userEmail: string) {
+    const usersRef = collection(firestore, "usersData");
+    const { docs } = await getDocs(usersRef);
+    const userData = docs.find((doc) => doc.data().email === userEmail);
+    if (userData) setUserData(userData.data() as UserData);
+    else createUserData(userEmail);
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (responseUser) => {
+      const mail = responseUser?.email as string;
+      generateUserData(mail);
       setUser(responseUser);
       setIsLoading(false);
     });
