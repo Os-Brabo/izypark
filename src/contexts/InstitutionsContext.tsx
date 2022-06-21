@@ -11,6 +11,7 @@ import React, {
   useEffect,
   useState
 } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 interface Institution {
   address: string;
@@ -21,17 +22,26 @@ interface Institution {
   state: string;
   id: string;
 }
+interface FormatedInstitution {
+  name: string;
+  id: string;
+  isFavorite: boolean;
+}
 
 type Props = {
   isLoading: boolean;
-  institutions: Institution[];
+  institutions: FormatedInstitution[];
 };
 
 export const InstitutionContext = createContext({} as Props);
-
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
   const [isLoading, setIsLoading] = useState(false);
+  const { userData } = useAuth();
   const [institutions, setInstitutions] = useState<Institution[]>([]);
+  const [formatedInstitutions, setFormatedInstitutions] = useState<
+    FormatedInstitution[]
+  >([]);
   const firestore = getFirestore();
   let unsubscribe: Unsubscribe;
 
@@ -48,15 +58,38 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     });
     unsubscribe = unsub;
   }
+  function isFavorite(id: string): boolean {
+    const favoriteInstitutions = userData?.favoriteInstitutions;
+    const favorite = favoriteInstitutions?.find(
+      (institutionId) => institutionId === id
+    );
+    console.log(favorite);
+    return Boolean(favorite);
+  }
+  function formatInstitutions() {
+    const formated: FormatedInstitution[] = institutions.map((institution) => {
+      return {
+        id: institution.id,
+        isFavorite: isFavorite(institution.id),
+        name: institution.name
+      };
+    });
+    setFormatedInstitutions(formated);
+  }
+
+  function favoriteInstitutions(): FormatedInstitution[] {
+    return formatedInstitutions.filter((institution) => institution.isFavorite);
+  }
 
   useEffect(() => {
     fetchInstitutions();
+    formatInstitutions();
     return unsubscribe;
   }, []);
 
   const value = {
     isLoading,
-    institutions
+    institutions: formatedInstitutions
   };
   return (
     <InstitutionContext.Provider value={value}>
