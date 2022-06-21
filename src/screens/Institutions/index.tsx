@@ -21,9 +21,11 @@ export function Institutions() {
     const favorite = favoriteInstitutions?.find(
       (institutionId) => institutionId === id
     );
+    console.log(favorite);
     return Boolean(favorite);
   }
   useEffect(() => {
+    console.log("institutions here", userData, institutions);
     const formatted: Institution[] = institutions.map((institution) => {
       return {
         id: institution.id,
@@ -31,8 +33,9 @@ export function Institutions() {
         name: institution.name
       };
     });
+
     setFormatedInstitutions(formatted);
-  }, [institutions]);
+  }, []);
 
   const searchMadeOnce = false;
   // TODO: Debounce on search institution
@@ -45,12 +48,12 @@ export function Institutions() {
       <FetchInstitutionsForm />
       <Spacer height={25} />
       {/* list results */}
-      {institutions.length === 0 ? (
+      {formatedInstitutions.length === 0 ? (
         <Text style={{ textAlign: "center" }}>Nenhum resultado encontrado</Text>
       ) : (
         <FlatList
           style={{ paddingHorizontal: 30 }}
-          data={institutions}
+          data={formatedInstitutions}
           renderItem={({ item }) => <InstitutionItem institution={item} />}
           keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}

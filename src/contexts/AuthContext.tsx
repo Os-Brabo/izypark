@@ -82,8 +82,12 @@ export function AuthProvider({ children }: ProviderProps) {
     const usersRef = collection(firestore, "usersData");
     const { docs } = await getDocs(usersRef);
     const userData = docs.find((doc) => doc.data().email === userEmail);
+    console.log(userData!.data());
     if (userData) setUserData(userData.data() as UserData);
     else createUserData(userEmail);
+  }
+  async function favoriteInstitution(instituionId: string): Promise<void> {
+    //
   }
 
   useEffect(() => {
