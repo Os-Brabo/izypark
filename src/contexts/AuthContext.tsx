@@ -41,6 +41,7 @@ type PasswordSignProps = {
 type AuthContextProps = {
   isAuthenticated: boolean;
   user: FirebaseUser | null;
+  userData: UserData | null;
   isLoading: boolean;
   signUpWithPassword(props: PasswordSignProps): Promise<Either<Error, null>>;
   signInWithPassword(props: PasswordSignProps): Promise<Either<Error, null>>;
@@ -135,6 +136,7 @@ export function AuthProvider({ children }: ProviderProps) {
       isAuthenticated: !!user,
       user,
       isLoading,
+      userData,
       signUpWithPassword,
       signInWithPassword,
       signOut
