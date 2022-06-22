@@ -58,7 +58,6 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
   }
 
   function formatInstitutions() {
-    console.log("formating....");
     const formated: FormatedInstitution[] = institutions.map((institution) => {
       return {
         id: institution.id,
@@ -66,7 +65,7 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
         name: institution.name
       };
     });
-    console.log("formated->", formated);
+
     setFormatedInstitutions(formated);
   }
   function fetchInstitutions() {
@@ -84,11 +83,6 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
   }
 
   function favoriteInstitutions(): FormatedInstitution[] {
-    const favorite = formatedInstitutions.filter(
-      (institution) => institution.isFavorite
-    );
-    console.log("vaf---", favorite);
-
     return formatedInstitutions.filter((institution) => institution.isFavorite);
   }
 
