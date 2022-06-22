@@ -5,6 +5,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { DefaultButton } from "../../../components/Buttons/DefaultButton";
 import { BlackTitle } from "../../../components/shared/BlackTitle";
 import { Spacer } from "../../../components/shared/Spacer";
+import { useInstitution } from "../../../hooks/useInstitution";
 import { FavoriteInstitution } from "./Favoriteinstitution";
 import * as S from "./styles";
 interface Institution {
@@ -12,15 +13,9 @@ interface Institution {
   id: string;
 }
 export function ListInstitutions() {
+  const { favoriteInstitutions } = useInstitution();
   const navigation = useNavigation();
-  const favoriteInstitutions: Institution[] = [
-    { title: "Facens", id: "1" },
-    { title: "Uniso", id: "12" },
-    { title: "Estádio Pacaembu", id: "3" },
-    { title: "Estádio Pacaembu", id: "31" },
-    { title: "Estádio Pacaembu", id: "32" },
-    { title: "Estádio Pacaembu", id: "33" }
-  ];
+  const institutions = favoriteInstitutions();
   function handleGetInstitutions() {
     navigation.navigate("Institutions.List");
   }
@@ -30,9 +25,9 @@ export function ListInstitutions() {
         <BlackTitle>Instituições</BlackTitle>
         <Spacer height={10} />
         <FlatList
-          data={favoriteInstitutions}
+          data={institutions}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <FavoriteInstitution title={item.title} />}
+          renderItem={({ item }) => <FavoriteInstitution title={item.name} />}
           ItemSeparatorComponent={() => <Spacer height={10} />}
         />
       </View>

@@ -91,9 +91,9 @@ export function AuthProvider({ children }: ProviderProps) {
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (responseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (responseUser) => {
       const mail = responseUser?.email as string;
-      generateUserData(mail);
+      await generateUserData(mail);
       setUser(responseUser);
       setIsLoading(false);
     });

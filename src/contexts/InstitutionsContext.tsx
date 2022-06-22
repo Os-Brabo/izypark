@@ -46,6 +46,29 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
   const firestore = getFirestore();
   let unsubscribe: Unsubscribe;
 
+  function isFavorite(id: string): boolean {
+    if (!userData) return false;
+    const { favoriteInstitutions } = userData;
+    if (!favoriteInstitutions) return false;
+    const favorite = favoriteInstitutions.find(
+      (institutionId) => institutionId === id
+    );
+    if (!favorite) return false;
+    return true;
+  }
+
+  function formatInstitutions() {
+    console.log("formating....");
+    const formated: FormatedInstitution[] = institutions.map((institution) => {
+      return {
+        id: institution.id,
+        isFavorite: isFavorite(institution.id),
+        name: institution.name
+      };
+    });
+    console.log("formated->", formated);
+    setFormatedInstitutions(formated);
+  }
   function fetchInstitutions() {
     const institutionsRef = collection(firestore, "institutions");
     const q = query(institutionsRef);
@@ -59,34 +82,23 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     });
     unsubscribe = unsub;
   }
-  function isFavorite(id: string): boolean {
-    const favoriteInstitutions = userData?.favoriteInstitutions;
-    const favorite = favoriteInstitutions?.find(
-      (institutionId) => institutionId === id
-    );
-    console.log(favorite);
-    return Boolean(favorite);
-  }
-  function formatInstitutions() {
-    const formated: FormatedInstitution[] = institutions.map((institution) => {
-      return {
-        id: institution.id,
-        isFavorite: isFavorite(institution.id),
-        name: institution.name
-      };
-    });
-    setFormatedInstitutions(formated);
-  }
 
   function favoriteInstitutions(): FormatedInstitution[] {
+    const favorite = formatedInstitutions.filter(
+      (institution) => institution.isFavorite
+    );
+    console.log("vaf---", favorite);
+
     return formatedInstitutions.filter((institution) => institution.isFavorite);
   }
 
   useEffect(() => {
     fetchInstitutions();
-    formatInstitutions();
     return unsubscribe;
   }, []);
+  useEffect(() => {
+    formatInstitutions();
+  }, [userData]);
 
   const value = {
     isLoading,

@@ -18,9 +18,9 @@ export const FavoriteInstitutionTitle = styled.Text`
   color: white;
   font-size: 26px;
   font-weight: bold;
-  padding-left: 26px;
   text-transform: uppercase;
+  max-height: 30px;
   flex: 1;
-  text-align: center;
+  text-align: left;
   font-family: "RobotoBlack";
 `;
