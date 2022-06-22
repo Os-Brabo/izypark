@@ -31,6 +31,7 @@ interface FormatedInstitution {
 type Props = {
   isLoading: boolean;
   institutions: FormatedInstitution[];
+  favoriteInstitutions(): FormatedInstitution[];
 };
 
 export const InstitutionContext = createContext({} as Props);
@@ -89,7 +90,8 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
 
   const value = {
     isLoading,
-    institutions: formatedInstitutions
+    institutions: formatedInstitutions,
+    favoriteInstitutions
   };
   return (
     <InstitutionContext.Provider value={value}>
