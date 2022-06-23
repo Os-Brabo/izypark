@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import { AuthProvider } from "../contexts/AuthContext";
+import { BlocksProvider } from "../contexts/BlocksContext";
 import { InstitutionProvider } from "../contexts/InstitutionsContext";
 import { VehicleProvider } from "../contexts/VehicleContext";
 import { ToasterProvider } from "./Toaster";
@@ -12,7 +13,9 @@ export function AppProvider({ children }: Props) {
     <ToasterProvider>
       <AuthProvider>
         <InstitutionProvider>
-          <VehicleProvider>{children}</VehicleProvider>
+          <BlocksProvider>
+            <VehicleProvider>{children}</VehicleProvider>
+          </BlocksProvider>
         </InstitutionProvider>
       </AuthProvider>
     </ToasterProvider>
