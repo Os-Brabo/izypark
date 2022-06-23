@@ -6,7 +6,6 @@ interface VacanciesProps {
 }
 
 const handleColorType = (availabe: number, vacancies: number) => {
-  // const amount = vacancies - availabe;
   if (availabe <= vacancies / 3) return "#5BC873";
   if (availabe <= vacancies / 2) return "#ffc107";
   return "#f44336";
