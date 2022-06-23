@@ -27,7 +27,9 @@ export function ListInstitutions() {
         <FlatList
           data={institutions}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <FavoriteInstitution title={item.name} />}
+          renderItem={({ item }) => (
+            <FavoriteInstitution title={item.name} id={item.id} />
+          )}
           ItemSeparatorComponent={() => <Spacer height={10} />}
         />
       </View>
