@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import * as S from "./styles";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useInstitution } from "../../../hooks/useInstitution";
 
 export interface Institution {
   id: string;
@@ -16,12 +17,14 @@ interface Props {
 
 export function InstitutionItem({ institution }: Props) {
   const navigation = useNavigation();
+  const { selectInstitution } = useInstitution();
   const iconSize = 30;
   const [isFavorite, setIsFavorite] = React.useState(institution.isFavorite);
   function handleFavoriteItem() {
     setIsFavorite(!isFavorite);
   }
   function handleNavigateToDetail() {
+    selectInstitution(institution.id);
     navigation.navigate("Institutions.Detail" as never, {} as never);
   }
   return (
