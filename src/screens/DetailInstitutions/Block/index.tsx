@@ -1,17 +1,26 @@
 import React from "react";
 import * as S from "./styles";
-interface Props {
-  block: {
-    id: string;
-    name: string;
-    vacancies: number;
-    availableNow: number;
-  };
+
+interface Block {
+  id: string;
+  name: string;
+  vacancies: number;
+  availableNow: number;
 }
-export function Block({ block }: Props) {
+interface Props {
+  handlePark(block: Block): void;
+  block: Block;
+}
+export function Block({ block, handlePark }: Props) {
   const totalVacancies = `/ ${block.vacancies}`;
+
+  function handlePress() {
+    console.log("handlePark");
+    handlePark(block);
+  }
+
   return (
-    <S.Container>
+    <S.Container onPress={handlePress}>
       <S.Title>{block.name}</S.Title>
       <S.Vacancies
         vacancies={block.vacancies}
