@@ -32,10 +32,14 @@ export function DetailInstitutions() {
   const { currentInstitution } = useInstitution();
   const { blocks, isLoading } = useBlocks();
   const [institution, setInstitution] = useState<Institution>({});
+  const [selectedBlock, setSelectedBlock] = useState<ParkingBlock>();
 
   function handleParkingBlockPress(block: ParkingBlock) {
     setModalVisible(true);
+    setSelectedBlock(block);
   }
+
+  function confirm() { }
 
   useEffect(() => {
     if (!currentInstitution) return;
@@ -98,13 +102,26 @@ export function DetailInstitutions() {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
+            <Text style={styles.modalText}>Deseja estacionar aqui?</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between"
+              }}
             >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>não</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => confirm()}
+              >
+                <Text style={styles.textStyle}>Sim!</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </Modal>
@@ -137,7 +154,9 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
+    width: 100,
+    textAlign: "center"
   },
   buttonOpen: {
     backgroundColor: "#F194FF"

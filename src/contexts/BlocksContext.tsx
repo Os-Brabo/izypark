@@ -5,8 +5,16 @@ import React, {
   useMemo,
   useState
 } from "react";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  setDoc
+} from "firebase/firestore";
 import { useInstitution } from "../hooks/useInstitution";
+import { Either, left, right } from "../utils/Either";
+import { useAuth } from "../hooks/useAuth";
 
 type Block = {
   id: string;
@@ -18,12 +26,14 @@ type Block = {
 type BlockContextProps = {
   isLoading: boolean;
   blocks?: Block[];
+  parkBlock(block: Block): Promise<Either<Error, null>>;
 };
 
 export const BlocksContext = createContext({} as BlockContextProps);
 
 export function BlocksProvider({ children }: PropsWithChildren<{}>) {
   const { currentInstitution } = useInstitution();
+  const { } = useAuth();
   const [blocks, setBlocks] = useState<Block[]>();
   const [isLoading, setIsLoading] = useState(true);
   const firestore = getFirestore();
@@ -44,6 +54,28 @@ export function BlocksProvider({ children }: PropsWithChildren<{}>) {
     setBlocks(data);
     setIsLoading(false);
   }
+
+  async function parkBlock(block: Block): Promise<Either<Error, null>> {
+    try {
+      const blockRef = doc(
+        firestore,
+        "institutions",
+        currentInstitution.id,
+        "blocks",
+        block.id
+      );
+      await setDoc(blockRef, {
+        ...block,
+        availableNow: block.availableNow - 1
+      });
+
+      return right(null);
+    } catch (error: any) {
+      console.log("err", error);
+      return left(new Error(error.message));
+    }
+  }
+
   useEffect(() => {
     fetchBlocks();
   }, [currentInstitution]);
@@ -51,7 +83,8 @@ export function BlocksProvider({ children }: PropsWithChildren<{}>) {
   const value: BlockContextProps = useMemo(
     () => ({
       blocks,
-      isLoading
+      isLoading,
+      parkBlock
     }),
     [blocks, isLoading]
   );

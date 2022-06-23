@@ -28,8 +28,13 @@ import { Either, left, right } from "../utils/Either";
 import { createUuid } from "../utils/gererateUuid";
 
 type UserData = {
-  email: string;
+  id: string;
   favoriteInstitutions: string[];
+  parkedAt: {
+    institutionId: string;
+    blockId: string;
+    parkedAt: Date;
+  } | null;
 };
 
 type PasswordSignProps = {
@@ -62,12 +67,11 @@ export function AuthProvider({ children }: ProviderProps) {
   const firestore = getFirestore();
   // let unsubscribe: Unsubscribe;
 
-  async function createUserData(userEmail: string) {
-    console.log("createUserData");
+  async function createUserData() {
     try {
-      const userDocRef = doc(firestore, "usersData", createUuid());
+      const userDocRef = doc(firestore, "usersData", auth!.currentUser!.uid);
       const userInitialData = {
-        email: userEmail,
+        id: auth!.currentUser!.uid,
         favoriteInstitutions: [],
         parkedAt: null
       };
@@ -78,23 +82,38 @@ export function AuthProvider({ children }: ProviderProps) {
     }
   }
 
-  async function generateUserData(userEmail: string) {
+  async function generateUserData() {
     const usersRef = collection(firestore, "usersData");
     const { docs } = await getDocs(usersRef);
-    const userData = docs.find((doc) => doc.data().email === userEmail);
+    const userData = docs.find(
+      (doc) => doc.data().id === auth!.currentUser!.uid
+    );
     console.log(userData?.data());
     if (userData) setUserData(userData.data() as UserData);
-    else createUserData(userEmail);
+    else createUserData();
   }
   async function favoriteInstitution(instituionId: string): Promise<void> {
     //
   }
 
+  async function setParkedCar(institutionId: string, blockId: string) {
+    if (!userData) return;
+    setUserData({
+      ...userData,
+      parkedAt: {
+        institutionId,
+        blockId,
+        parkedAt: new Date()
+      }
+    } as UserData);
+    const userDocRef = doc(firestore, "usersData", userData.id);
+    await setDoc(userDocRef, userData);
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (responseUser) => {
       console.log(responseUser);
-      const mail = responseUser?.email as string;
-      await generateUserData(mail);
+      await generateUserData();
       setUser(responseUser);
       setIsLoading(false);
     });
