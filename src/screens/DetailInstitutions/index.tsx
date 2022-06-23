@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import { DefaultButton } from "../../components/Buttons/DefaultButton";
 import { Header } from "../../components/Header";
 import { CenterBoldText } from "../../components/shared/Atoms";
 import { BlackTitle } from "../../components/shared/BlackTitle";
 import { Spacer } from "../../components/shared/Spacer";
+import { useBlocks } from "../../hooks/useBlocks";
+import { useInstitution } from "../../hooks/useInstitution";
 import { Block } from "./Block";
 
 interface ParkingBlock {
@@ -12,60 +14,40 @@ interface ParkingBlock {
   name: string;
   vacancies: number;
   availableNow: number;
-  createdAt: Date;
 }
 interface Institution {
   title: string;
   parkingBlocks: ParkingBlock[];
 }
 export function DetailInstitutions() {
-  const institution: Institution = {
-    title: "Facens",
-    parkingBlocks: [
-      {
-        id: "1",
-        name: "Bloco A",
-        createdAt: new Date(),
-        availableNow: 1,
-        vacancies: 5
-      },
-      {
-        id: "2",
-        name: "Bloco B",
-        createdAt: new Date(),
-        availableNow: 15,
-        vacancies: 30
-      },
-      {
-        id: "3",
-        name: "Bloco C",
-        createdAt: new Date(),
-        availableNow: 18,
-        vacancies: 20
-      },
-      {
-        id: "4",
-        name: "Bloco C",
-        createdAt: new Date(),
-        availableNow: 18,
-        vacancies: 20
-      },
-      {
-        id: "5",
-        name: "Bloco C",
-        createdAt: new Date(),
-        availableNow: 18,
-        vacancies: 20
-      },
-      {
-        id: "6",
-        name: "Bloco j",
-        createdAt: new Date(),
-        availableNow: 18,
-        vacancies: 20
-      }
-    ]
-  };
+  const { currentInstitution } = useInstitution();
+  const { blocks, isLoading } = useBlocks();
+  const [institution, setInstitution] = useState<Institution>({});
+
+  useEffect(() => {
+    if (!currentInstitution) return;
+    if (!blocks) {
+      setInstitution({
+        title: currentInstitution.name,
+        parkingBlocks: []
+      });
+      return;
+    }
+
+    const blocksFromated: ParkingBlock[] = blocks.map((block) => {
+      return {
+        id: block.id,
+        name: block.name,
+        vacancies: block.vacancies,
+        availableNow: block.availableNow
+      };
+    });
+    setInstitution({
+      title: currentInstitution.name,
+      parkingBlocks: blocksFromated
+    });
+  }, [isLoading]);
+
   return (
     <View style={{ flex: 1 }}>
       <Header />

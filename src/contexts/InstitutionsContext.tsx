@@ -32,6 +32,8 @@ type Props = {
   isLoading: boolean;
   institutions: FormatedInstitution[];
   favoriteInstitutions(): FormatedInstitution[];
+  currentInstitution: Institution;
+  selectInstitution(id: string): void;
 };
 
 export const InstitutionContext = createContext({} as Props);
@@ -43,6 +45,8 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
   const [formatedInstitutions, setFormatedInstitutions] = useState<
     FormatedInstitution[]
   >([]);
+  const [currentInstitution, setCurrentInstitution] =
+    useState<Institution | null>(null);
   const firestore = getFirestore();
   let unsubscribe: Unsubscribe;
 
@@ -82,6 +86,14 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     unsubscribe = unsub;
   }
 
+  function selectInstitution(id: string) {
+    const institution = institutions.find(
+      (institution) => institution.id === id
+    );
+    if (!institution) return;
+    setCurrentInstitution(institution);
+  }
+
   function favoriteInstitutions(): FormatedInstitution[] {
     return formatedInstitutions.filter((institution) => institution.isFavorite);
   }
@@ -97,7 +109,9 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
   const value = {
     isLoading,
     institutions: formatedInstitutions,
-    favoriteInstitutions
+    favoriteInstitutions,
+    currentInstitution,
+    selectInstitution
   };
   return (
     <InstitutionContext.Provider value={value}>
