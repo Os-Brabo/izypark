@@ -5,9 +5,10 @@ interface VacanciesProps {
   availableNow: number;
 }
 
-const handleColorType = (amount: number) => {
-  if (amount <= 5) return "#5BC873";
-  if (amount <= 15) return "#ffc107";
+const handleColorType = (availabe: number, vacancies: number) => {
+  // const amount = vacancies - availabe;
+  if (availabe <= vacancies / 3) return "#5BC873";
+  if (availabe <= vacancies / 2) return "#ffc107";
   return "#f44336";
 };
 
@@ -32,12 +33,9 @@ export const Title = styled.Text`
 
 export const Vacancies = styled.View<VacanciesProps>`
   height: 100%;
-  /* border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px; */
   flex-basis: 30%;
-  /* background-color: #ff323a; */
-  /* background-color: : ${({ vacancies }) => handleColorType(vacancies)}; */
-  background-color: ${(props) => handleColorType(props.availableNow)};
+  background-color: ${(props) =>
+    handleColorType(props.availableNow, props.vacancies)};
   flex-direction: row;
   align-items: center;
   justify-content: center;
