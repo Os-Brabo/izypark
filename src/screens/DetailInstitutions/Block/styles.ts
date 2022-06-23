@@ -11,7 +11,7 @@ const handleColorType = (availabe: number, vacancies: number) => {
   return "#f44336";
 };
 
-export const Container = styled.View`
+export const Container = styled.TouchableOpacity`
   background-color: #3a3a3a;
   border-radius: 8px;
   /* padding: 15px 0; */

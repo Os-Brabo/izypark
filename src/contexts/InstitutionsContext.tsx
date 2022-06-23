@@ -66,7 +66,7 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
       return {
         id: institution.id,
         isFavorite: isFavorite(institution.id),
-        name: institution.name
+        name: institution.initials
       };
     });
 
