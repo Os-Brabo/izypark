@@ -26,6 +26,8 @@ import React, {
 
 import { Either, left, right } from "../utils/Either";
 import { createUuid } from "../utils/gererateUuid";
+import { Block } from "./BlocksContext";
+import { Institution } from "./InstitutionsContext";
 
 type UserData = {
   id: string;
@@ -34,6 +36,8 @@ type UserData = {
     institutionId: string;
     blockId: string;
     parkedAt: Date;
+    institutionName: string;
+    blockName: string;
   } | null;
 };
 
@@ -51,6 +55,10 @@ type AuthContextProps = {
   signUpWithPassword(props: PasswordSignProps): Promise<Either<Error, null>>;
   signInWithPassword(props: PasswordSignProps): Promise<Either<Error, null>>;
   signOut(): Promise<void>;
+  setParkedCar(
+    institution: Institution,
+    block: Block
+  ): Promise<Either<Error, null>>;
 };
 
 type ProviderProps = {
@@ -89,25 +97,33 @@ export function AuthProvider({ children }: ProviderProps) {
       (doc) => doc.data().id === auth!.currentUser!.uid
     );
     console.log(userData?.data());
-    if (userData) setUserData(userData.data() as UserData);
+    const data = userData?.data() as UserData;
+    if (data.parkedAt) {
+      data.parkedAt.parkedAt = data.parkedAt.parkedAt.toDate();
+    }
+
+    if (userData) setUserData(data as UserData);
     else createUserData();
   }
   async function favoriteInstitution(instituionId: string): Promise<void> {
     //
   }
 
-  async function setParkedCar(institutionId: string, blockId: string) {
+  async function setParkedCar(institution: Institution, block: Block) {
     if (!userData) return;
     setUserData({
       ...userData,
       parkedAt: {
-        institutionId,
-        blockId,
+        institutionId: institution.id,
+        institutionName: institution.initials,
+        blockId: block.id,
+        blockName: block.name,
         parkedAt: new Date()
       }
     } as UserData);
     const userDocRef = doc(firestore, "usersData", userData.id);
     await setDoc(userDocRef, userData);
+    return right(null);
   }
 
   useEffect(() => {
@@ -176,7 +192,8 @@ export function AuthProvider({ children }: ProviderProps) {
       credentialSignIn,
       signUpWithPassword,
       signInWithPassword,
-      signOut
+      signOut,
+      setParkedCar
     }),
     [
       user,
@@ -184,7 +201,8 @@ export function AuthProvider({ children }: ProviderProps) {
       credentialSignIn,
       signUpWithPassword,
       signInWithPassword,
-      signOut
+      signOut,
+      setParkedCar
     ]
   );
 

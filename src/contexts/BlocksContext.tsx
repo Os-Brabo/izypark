@@ -10,13 +10,16 @@ import {
   doc,
   getDocs,
   getFirestore,
-  setDoc
+  onSnapshot,
+  query,
+  setDoc,
+  Unsubscribe
 } from "firebase/firestore";
 import { useInstitution } from "../hooks/useInstitution";
 import { Either, left, right } from "../utils/Either";
 import { useAuth } from "../hooks/useAuth";
 
-type Block = {
+export type Block = {
   id: string;
   name: string;
   vacancies: number;
@@ -33,10 +36,11 @@ export const BlocksContext = createContext({} as BlockContextProps);
 
 export function BlocksProvider({ children }: PropsWithChildren<{}>) {
   const { currentInstitution } = useInstitution();
-  const { } = useAuth();
+  const { setParkedCar } = useAuth();
   const [blocks, setBlocks] = useState<Block[]>();
   const [isLoading, setIsLoading] = useState(true);
   const firestore = getFirestore();
+  let unsubscribe: Unsubscribe;
 
   async function fetchBlocks() {
     if (!currentInstitution) return;
@@ -46,13 +50,16 @@ export function BlocksProvider({ children }: PropsWithChildren<{}>) {
       currentInstitution.id,
       "blocks"
     );
-    const result = await getDocs(blocksRef);
-    const data: Block[] = [];
-    result.forEach((doc) => {
-      data.push({ id: doc.id, ...doc.data() } as Block);
+    const unsub = onSnapshot(blocksRef, (firebaseData) => {
+      const data: Block[] = [];
+      firebaseData.forEach((doc) => {
+        const block = { id: doc.id, ...doc.data() } as Block;
+        data.push(block);
+      });
+      setBlocks(data);
+      setIsLoading(false);
     });
-    setBlocks(data);
-    setIsLoading(false);
+    unsubscribe = unsub;
   }
 
   async function parkBlock(block: Block): Promise<Either<Error, null>> {
@@ -68,7 +75,7 @@ export function BlocksProvider({ children }: PropsWithChildren<{}>) {
         ...block,
         availableNow: block.availableNow - 1
       });
-
+      await setParkedCar(currentInstitution.id, block.id);
       return right(null);
     } catch (error: any) {
       console.log("err", error);
@@ -78,6 +85,7 @@ export function BlocksProvider({ children }: PropsWithChildren<{}>) {
 
   useEffect(() => {
     fetchBlocks();
+    return unsubscribe;
   }, [currentInstitution]);
 
   const value: BlockContextProps = useMemo(

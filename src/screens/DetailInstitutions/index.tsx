@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -28,9 +29,10 @@ interface Institution {
   parkingBlocks: ParkingBlock[];
 }
 export function DetailInstitutions() {
+  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const { currentInstitution } = useInstitution();
-  const { blocks, isLoading } = useBlocks();
+  const { blocks, isLoading, parkBlock } = useBlocks();
   const [institution, setInstitution] = useState<Institution>({});
   const [selectedBlock, setSelectedBlock] = useState<ParkingBlock>();
 
@@ -39,7 +41,12 @@ export function DetailInstitutions() {
     setSelectedBlock(block);
   }
 
-  function confirm() { }
+  async function confirm() {
+    console.log("@block confirm park");
+    if (!selectedBlock) return;
+    await parkBlock(selectedBlock);
+    navigation.navigate("Home");
+  }
 
   useEffect(() => {
     if (!currentInstitution) return;

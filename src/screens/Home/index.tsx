@@ -1,14 +1,18 @@
 import React from "react";
 import { Header } from "../../components/Header";
 import { BlackTitle } from "../../components/shared/BlackTitle";
+import { useAuth } from "../../hooks/useAuth";
 import { ListInstitutions } from "./ListInstitutions";
 import { ParkedPlace } from "./ParkedPlace";
 import * as S from "./styles";
 
 export function Home() {
+  const { userData } = useAuth();
+
   const economizedGaz = 128.18;
   const availableCoins = 35;
-  const parkedPlace = null;
+
+  const parkedPlace = userData?.parkedAt;
   /**
    * {
     institution: "Facens",

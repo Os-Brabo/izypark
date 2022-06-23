@@ -13,7 +13,7 @@ import React, {
 } from "react";
 import { useAuth } from "../hooks/useAuth";
 
-interface Institution {
+export interface Institution {
   address: string;
   cep: string;
   city: string;
