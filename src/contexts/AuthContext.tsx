@@ -4,17 +4,16 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
-  User as FirebaseUser
+  User as FirebaseUser,
+  signInWithCredential,
+  AuthCredential
 } from "firebase/auth";
 import {
   collection,
   doc,
   getDocs,
   getFirestore,
-  query,
-  setDoc,
-  Unsubscribe,
-  where
+  setDoc
 } from "firebase/firestore";
 import React, {
   createContext,
@@ -43,6 +42,7 @@ type AuthContextProps = {
   user: FirebaseUser | null;
   userData: UserData | null;
   isLoading: boolean;
+  credentialSignIn(credential: AuthCredential): Promise<Either<Error, null>>;
   signUpWithPassword(props: PasswordSignProps): Promise<Either<Error, null>>;
   signInWithPassword(props: PasswordSignProps): Promise<Either<Error, null>>;
   signOut(): Promise<void>;
@@ -82,7 +82,7 @@ export function AuthProvider({ children }: ProviderProps) {
     const usersRef = collection(firestore, "usersData");
     const { docs } = await getDocs(usersRef);
     const userData = docs.find((doc) => doc.data().email === userEmail);
-    console.log(userData!.data());
+    console.log(userData?.data());
     if (userData) setUserData(userData.data() as UserData);
     else createUserData(userEmail);
   }
@@ -92,6 +92,7 @@ export function AuthProvider({ children }: ProviderProps) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (responseUser) => {
+      console.log(responseUser);
       const mail = responseUser?.email as string;
       await generateUserData(mail);
       setUser(responseUser);
@@ -100,6 +101,18 @@ export function AuthProvider({ children }: ProviderProps) {
 
     return unsubscribe;
   }, []);
+
+  const credentialSignIn = useCallback(
+    async (credential: AuthCredential): Promise<Either<Error, null>> => {
+      try {
+        await signInWithCredential(auth, credential);
+        return right(null);
+      } catch (err: any) {
+        return left(err.message);
+      }
+    },
+    []
+  );
 
   const signUpWithPassword = useCallback(
     async ({
@@ -141,11 +154,19 @@ export function AuthProvider({ children }: ProviderProps) {
       user,
       isLoading,
       userData,
+      credentialSignIn,
       signUpWithPassword,
       signInWithPassword,
       signOut
     }),
-    [user, isLoading, signUpWithPassword, signInWithPassword, signOut]
+    [
+      user,
+      isLoading,
+      credentialSignIn,
+      signUpWithPassword,
+      signInWithPassword,
+      signOut
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
