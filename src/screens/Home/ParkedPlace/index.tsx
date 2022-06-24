@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import React from "react";
 import { DangerButton } from "../../../components/Buttons/DangerButton";
 import { BlackTitle } from "../../../components/shared/BlackTitle";
+import { useBlocks } from "../../../hooks/useBlocks";
 import { CenterText } from "./styles";
 
 interface Props {
@@ -14,9 +15,11 @@ interface Props {
   };
 }
 export function ParkedPlace({ place }: Props) {
+  const { exitBlock } = useBlocks();
   const since = format(place.parkedAt, "HH:mm");
-  function handleOutPlace() {
+  async function handleOutPlace() {
     console.log("quero sair da vaga");
+    await exitBlock(place.blockId);
   }
 
   return (

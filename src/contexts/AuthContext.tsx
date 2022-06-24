@@ -59,6 +59,7 @@ type AuthContextProps = {
     institution: Institution,
     block: Block
   ): Promise<Either<Error, null>>;
+  clearParkedCar(): Promise<Either<Error, null>>;
 };
 
 type ProviderProps = {
@@ -98,7 +99,7 @@ export function AuthProvider({ children }: ProviderProps) {
     );
     console.log(userData?.data());
     const data = userData?.data() as UserData;
-    if (data.parkedAt) {
+    if (data?.parkedAt) {
       data.parkedAt.parkedAt = data.parkedAt.parkedAt.toDate();
     }
 
@@ -120,6 +121,16 @@ export function AuthProvider({ children }: ProviderProps) {
         blockName: block.name,
         parkedAt: new Date()
       }
+    } as UserData);
+    const userDocRef = doc(firestore, "usersData", userData.id);
+    await setDoc(userDocRef, userData);
+    return right(null);
+  }
+  async function clearParkedCar() {
+    if (!userData) return;
+    setUserData({
+      ...userData,
+      parkedAt: null
     } as UserData);
     const userDocRef = doc(firestore, "usersData", userData.id);
     await setDoc(userDocRef, userData);
@@ -193,7 +204,8 @@ export function AuthProvider({ children }: ProviderProps) {
       signUpWithPassword,
       signInWithPassword,
       signOut,
-      setParkedCar
+      setParkedCar,
+      clearParkedCar
     }),
     [
       user,
@@ -202,7 +214,8 @@ export function AuthProvider({ children }: ProviderProps) {
       signUpWithPassword,
       signInWithPassword,
       signOut,
-      setParkedCar
+      setParkedCar,
+      clearParkedCar
     ]
   );
 

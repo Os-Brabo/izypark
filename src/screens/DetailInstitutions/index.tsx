@@ -70,7 +70,7 @@ export function DetailInstitutions() {
       title: currentInstitution.name,
       parkingBlocks: blocksFromated
     });
-  }, [isLoading]);
+  }, [isLoading, blocks]);
 
   return (
     <View style={{ flex: 1 }}>

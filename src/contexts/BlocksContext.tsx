@@ -11,6 +11,7 @@ import {
   getDocs,
   getFirestore,
   onSnapshot,
+  orderBy,
   query,
   setDoc,
   Unsubscribe
@@ -30,13 +31,14 @@ type BlockContextProps = {
   isLoading: boolean;
   blocks?: Block[];
   parkBlock(block: Block): Promise<Either<Error, null>>;
+  exitBlock(blockId: string): Promise<void>;
 };
 
 export const BlocksContext = createContext({} as BlockContextProps);
 
 export function BlocksProvider({ children }: PropsWithChildren<{}>) {
   const { currentInstitution } = useInstitution();
-  const { setParkedCar } = useAuth();
+  const { setParkedCar, clearParkedCar } = useAuth();
   const [blocks, setBlocks] = useState<Block[]>();
   const [isLoading, setIsLoading] = useState(true);
   const firestore = getFirestore();
@@ -50,6 +52,7 @@ export function BlocksProvider({ children }: PropsWithChildren<{}>) {
       currentInstitution.id,
       "blocks"
     );
+    const q = query(blocksRef, orderBy("createdAt"));
     const unsub = onSnapshot(blocksRef, (firebaseData) => {
       const data: Block[] = [];
       firebaseData.forEach((doc) => {
@@ -75,14 +78,29 @@ export function BlocksProvider({ children }: PropsWithChildren<{}>) {
         ...block,
         availableNow: block.availableNow - 1
       });
-      await setParkedCar(currentInstitution.id, block.id);
+      await setParkedCar(currentInstitution, block);
       return right(null);
     } catch (error: any) {
       console.log("err", error);
       return left(new Error(error.message));
     }
   }
-
+  async function exitBlock(blockId: string) {
+    const block = blocks?.find((block) => block.id === blockId);
+    if (!block) throw new Error("sem block");
+    const blockRef = doc(
+      firestore,
+      "institutions",
+      currentInstitution.id,
+      "blocks",
+      blockId
+    );
+    await setDoc(blockRef, {
+      ...block,
+      availableNow: block.availableNow + 1
+    });
+    await clearParkedCar();
+  }
   useEffect(() => {
     fetchBlocks();
     return unsubscribe;
@@ -92,7 +110,8 @@ export function BlocksProvider({ children }: PropsWithChildren<{}>) {
     () => ({
       blocks,
       isLoading,
-      parkBlock
+      parkBlock,
+      exitBlock
     }),
     [blocks, isLoading]
   );

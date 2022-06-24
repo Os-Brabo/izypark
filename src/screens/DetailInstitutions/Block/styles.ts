@@ -6,9 +6,13 @@ interface VacanciesProps {
 }
 
 const handleColorType = (availabe: number, vacancies: number) => {
-  if (availabe <= vacancies / 3) return "#5BC873";
-  if (availabe <= vacancies / 2) return "#ffc107";
-  return "#f44336";
+  if (availabe <= 5) {
+    return "#f44336";
+  }
+  if (availabe <= 15) {
+    return "#ffc107";
+  }
+  return "#5BC873";
 };
 
 export const Container = styled.TouchableOpacity`
