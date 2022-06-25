@@ -14,7 +14,8 @@ import {
   orderBy,
   query,
   setDoc,
-  Unsubscribe
+  Unsubscribe,
+  updateDoc
 } from "firebase/firestore";
 import { useInstitution } from "../hooks/useInstitution";
 import { Either, left, right } from "../utils/Either";
@@ -74,10 +75,11 @@ export function BlocksProvider({ children }: PropsWithChildren<{}>) {
         "blocks",
         block.id
       );
-      await setDoc(blockRef, {
-        ...block,
-        availableNow: block.availableNow - 1
-      });
+      await updateDoc(blockRef, { availableNow: block.availableNow - 1 });
+      // await setDoc(blockRef, {
+      //   ...block,
+      //   availableNow: block.availableNow - 1
+      // });
       await setParkedCar(currentInstitution, block);
       return right(null);
     } catch (error: any) {
@@ -95,10 +97,11 @@ export function BlocksProvider({ children }: PropsWithChildren<{}>) {
       "blocks",
       blockId
     );
-    await setDoc(blockRef, {
-      ...block,
-      availableNow: block.availableNow + 1
-    });
+    await updateDoc(blockRef, { availableNow: block.availableNow + 1 });
+    // await setDoc(blockRef, {
+    //   ...block,
+    //   availableNow: block.availableNow + 1
+    // });
     await clearParkedCar();
   }
   useEffect(() => {
