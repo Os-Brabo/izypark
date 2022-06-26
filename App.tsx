@@ -12,14 +12,8 @@ import { Toaster } from "./src/components/Toaster";
 import { AppProvider } from "./src/hooks";
 import { Routes } from "./src/routes";
 
-// import "./src/services/firebase";
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
   apiKey: "AIzaSyCuYO94ZTBUyqetY0Sz759L_Ly0iA7X41I",
@@ -33,9 +27,6 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase
-// const analytics = getAnalytics(app);
 
 export default function App() {
   const [fontsLoaded] = useFonts({
