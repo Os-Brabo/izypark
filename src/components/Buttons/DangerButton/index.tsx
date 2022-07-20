@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components/native";
 
 export const ButtonContainer = styled.TouchableOpacity`
@@ -8,25 +8,24 @@ export const ButtonContainer = styled.TouchableOpacity`
   margin-top: 20px;
   min-width: 290px;
   align-self: center;
-  
-`
+`;
 export const ButtonText = styled.Text`
   color: #fff;
   text-align: center;
   font-weight: bold;
   font-size: 18px;
-  font-family: 'RobotoBlack';
-`
+  font-family: "RobotoBlack";
+`;
 
 interface Props {
-  label: string
-  onPress: () => void
+  label: string;
+  onPress: () => void;
 }
 
-export function DangerButton({label, onPress}: Props) {
+export function DangerButton({ label, onPress }: Props) {
   return (
     <ButtonContainer onPress={onPress}>
       <ButtonText>{label}</ButtonText>
     </ButtonContainer>
-  )
+  );
 }

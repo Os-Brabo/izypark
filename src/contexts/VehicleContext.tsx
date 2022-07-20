@@ -59,6 +59,7 @@ export function VehicleProvider({ children }: PropsWithChildren<{}>) {
     }
   }
   async function fetchVehicles() {
+    if (!user?.uid) return;
     const vehiclesRef = collection(firestore, "cars");
     const q = query(vehiclesRef, where("userId", "==", user?.uid));
     const unsub = onSnapshot(q, (firebaseData) => {

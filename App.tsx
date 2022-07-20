@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import "react-native-reanimated";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
   Roboto_400Regular,
@@ -14,6 +14,7 @@ import { Routes } from "./src/routes";
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { View } from "react-native";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCuYO94ZTBUyqetY0Sz759L_Ly0iA7X41I",
@@ -28,15 +29,27 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 
+SplashScreen.preventAutoHideAsync();
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     RobotoRegular: Roboto_400Regular,
     RobotoBlack: Roboto_700Bold,
     RobotoMedium: Roboto_500Medium
   });
+
+  useEffect(() => {
+    (async () => {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    })();
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return null;
   }
+
   return (
     <AppProvider>
       <Routes />
