@@ -8,10 +8,7 @@ import { Spacer } from "../../../components/shared/Spacer";
 import { useInstitution } from "../../../hooks/useInstitution";
 import { FavoriteInstitution } from "./Favoriteinstitution";
 import * as S from "./styles";
-interface Institution {
-  title: string;
-  id: string;
-}
+
 export function ListInstitutions() {
   const { favoriteInstitutions } = useInstitution();
   const navigation = useNavigation();

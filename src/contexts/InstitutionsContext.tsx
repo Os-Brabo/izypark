@@ -32,7 +32,7 @@ type Props = {
   isLoading: boolean;
   institutions: FormatedInstitution[];
   favoriteInstitutions(): FormatedInstitution[];
-  currentInstitution: Institution;
+  currentInstitution: Institution | null;
   selectInstitution(id: string): void;
 };
 
@@ -104,7 +104,7 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
   }, []);
   useEffect(() => {
     formatInstitutions();
-  }, [userData]);
+  }, [userData?.favoriteInstitutions]);
 
   const value = {
     isLoading,
