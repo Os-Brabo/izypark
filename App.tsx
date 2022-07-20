@@ -14,7 +14,6 @@ import { Routes } from "./src/routes";
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { View } from "react-native";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCuYO94ZTBUyqetY0Sz759L_Ly0iA7X41I",

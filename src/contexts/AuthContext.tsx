@@ -25,7 +25,6 @@ import React, {
 } from "react";
 
 import { Either, left, right } from "../utils/Either";
-import { createUuid } from "../utils/gererateUuid";
 import { Block } from "./BlocksContext";
 import { Institution } from "./InstitutionsContext";
 
@@ -60,6 +59,7 @@ type AuthContextProps = {
     block: Block
   ): Promise<Either<Error, null>>;
   clearParkedCar(): Promise<Either<Error, null>>;
+  favoriteInstitution(institutionId: string): Promise<void>;
 };
 
 type ProviderProps = {
@@ -107,7 +107,23 @@ export function AuthProvider({ children }: ProviderProps) {
     else createUserData();
   }
   async function favoriteInstitution(instituionId: string): Promise<void> {
-    //
+    if (!userData) return;
+    const newUserData = { ...userData };
+    if (userData.favoriteInstitutions.includes(instituionId)) {
+      // remove from favorites
+      newUserData.favoriteInstitutions = userData.favoriteInstitutions.filter(
+        (id) => id !== instituionId
+      );
+    } else {
+      // add to favorites
+      newUserData.favoriteInstitutions = [
+        ...userData.favoriteInstitutions,
+        instituionId
+      ];
+    }
+    setUserData(newUserData);
+    const userDocRef = doc(firestore, "usersData", userData.id);
+    await setDoc(userDocRef, userData);
   }
 
   async function setParkedCar(institution: Institution, block: Block) {
@@ -205,7 +221,8 @@ export function AuthProvider({ children }: ProviderProps) {
       signInWithPassword,
       signOut,
       setParkedCar,
-      clearParkedCar
+      clearParkedCar,
+      favoriteInstitution
     }),
     [
       user,
@@ -215,7 +232,8 @@ export function AuthProvider({ children }: ProviderProps) {
       signInWithPassword,
       signOut,
       setParkedCar,
-      clearParkedCar
+      clearParkedCar,
+      favoriteInstitution
     ]
   );
 
