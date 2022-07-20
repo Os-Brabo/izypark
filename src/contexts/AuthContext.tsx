@@ -106,25 +106,28 @@ export function AuthProvider({ children }: ProviderProps) {
     if (userData) setUserData(data as UserData);
     else createUserData();
   }
-  async function favoriteInstitution(instituionId: string): Promise<void> {
-    if (!userData) return;
-    const newUserData = { ...userData };
-    if (userData.favoriteInstitutions.includes(instituionId)) {
-      // remove from favorites
-      newUserData.favoriteInstitutions = userData.favoriteInstitutions.filter(
-        (id) => id !== instituionId
-      );
-    } else {
-      // add to favorites
-      newUserData.favoriteInstitutions = [
-        ...userData.favoriteInstitutions,
-        instituionId
-      ];
-    }
-    setUserData(newUserData);
-    const userDocRef = doc(firestore, "usersData", userData.id);
-    await setDoc(userDocRef, userData);
-  }
+  const favoriteInstitution = useCallback(
+    async (instituionId: string) => {
+      if (!userData) return;
+      const newUserData = { ...userData };
+      if (userData.favoriteInstitutions.includes(instituionId)) {
+        // remove from favorites
+        newUserData.favoriteInstitutions = userData.favoriteInstitutions.filter(
+          (id) => id !== instituionId
+        );
+      } else {
+        // add to favorites
+        newUserData.favoriteInstitutions = [
+          ...userData.favoriteInstitutions,
+          instituionId
+        ];
+      }
+      setUserData(newUserData);
+      const userDocRef = doc(firestore, "usersData", userData.id);
+      await setDoc(userDocRef, newUserData);
+    },
+    [userData]
+  );
 
   async function setParkedCar(institution: Institution, block: Block) {
     if (!userData) return;
