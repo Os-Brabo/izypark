@@ -4,7 +4,8 @@ import {
   getFirestore,
   onSnapshot,
   query,
-  Unsubscribe
+  Unsubscribe,
+  where
 } from "firebase/firestore";
 import React, {
   createContext,
@@ -107,7 +108,7 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
       institutionId,
       "products"
     );
-    const q = query(productsRef);
+    const q = query(productsRef, where("isDisabled", "==", false));
     const result = await getDocs(q);
     const data: Product[] = [];
     result.forEach((product) => {
