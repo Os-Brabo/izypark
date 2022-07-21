@@ -1,13 +1,14 @@
 import React from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { Header } from "../../components/Header";
-import { PorchasedProductProps } from "../../components/Product/PurchasedProduct";
-import { ShelfProduct } from "../../components/Product/ShelfProduct";
+import {
+  PorchasedProductProps,
+  PurchasedProduct
+} from "../../components/Product/PurchasedProduct";
 import { BlackTitle } from "../../components/shared/BlackTitle";
 import { Spacer } from "../../components/shared/Spacer";
-import * as S from "./styles";
 
-export function Store() {
+export function Purchases() {
   const items: PorchasedProductProps[] = [
     {
       title: "Coca-Cola",
@@ -37,8 +38,8 @@ export function Store() {
   ];
   return (
     <>
-      <Header returnTo="back" />
-      <BlackTitle>FACENS - Loja</BlackTitle>
+      <Header />
+      <BlackTitle>Minhas Compras</BlackTitle>
       <FlatList
         style={{ padding: 15, marginTop: 30 }}
         data={items}
@@ -46,11 +47,10 @@ export function Store() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 69 }}
         ItemSeparatorComponent={() => <Spacer height={15} />}
-        renderItem={({ item }) => <ShelfProduct data={item} key={item.id} />}
+        renderItem={({ item }) => (
+          <PurchasedProduct data={item} key={item.id} />
+        )}
       />
-      <S.CoinsContainer>
-        <S.CoinsText>35 moedas disponíveis</S.CoinsText>
-      </S.CoinsContainer>
     </>
   );
 }

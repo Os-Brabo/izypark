@@ -94,8 +94,11 @@ export function DetailInstitutions() {
         )}
       />
       <View style={{ flexBasis: "25%" }}>
-        <DefaultButton label="loja da instituição" onPress={() => { }} />
-        <DefaultButton label="loja da instituição" onPress={() => { }} />
+        <DefaultButton
+          label="loja da instituição"
+          onPress={() => navigation.navigate("Institutions.Store")}
+        />
+        <DefaultButton label="loja da instituição" onPress={() => {}} />
       </View>
 
       <Modal
