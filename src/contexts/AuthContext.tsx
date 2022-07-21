@@ -49,7 +49,7 @@ type PasswordSignProps = {
 type AuthContextProps = {
   isAuthenticated: boolean;
   user: FirebaseUser | null;
-  userData: UserData | null;
+  userData: UserData;
   isLoading: boolean;
   credentialSignIn(credential: AuthCredential): Promise<Either<Error, null>>;
   signUpWithPassword(props: PasswordSignProps): Promise<Either<Error, null>>;
@@ -73,7 +73,7 @@ export function AuthProvider({ children }: ProviderProps) {
   const auth = getAuth();
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<UserData>({} as UserData);
   const firestore = getFirestore();
   // let unsubscribe: Unsubscribe;
 

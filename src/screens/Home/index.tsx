@@ -9,17 +9,10 @@ import * as S from "./styles";
 export function Home() {
   const { userData } = useAuth();
 
-  const economizedGaz = 128.18;
+  const economizedGaz = userData.savedGaz.toFixed(1);
   const availableCoins = 35;
+  const parkedPlace = userData.parkedAt;
 
-  const parkedPlace = userData?.parkedAt;
-  /**
-   * {
-    institution: "Facens",
-    block: "Bloco A",
-    parkedAt: "10:00"
-  };
-   */
   return (
     <>
       <S.TopContainer>
