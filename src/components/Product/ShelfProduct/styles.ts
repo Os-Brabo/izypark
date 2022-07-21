@@ -4,8 +4,8 @@ export const Container = styled.View`
   padding: 10px;
 `;
 
-export const BuyButton = styled.TouchableOpacity`
-  background-color: #5bc873;
+export const BuyButton = styled.TouchableOpacity<{ isDisabled: boolean }>`
+  background-color: ${(props) => (props.isDisabled ? "#A3A3A3" : "#5bc873")};
   border-radius: 8px;
   height: 44px;
   align-items: center;
