@@ -7,9 +7,11 @@ import { Spacer } from "../../components/shared/Spacer";
 import { useInstitution } from "../../hooks/useInstitution";
 import { ProductProps } from "../../components/Product/types";
 import * as S from "./styles";
+import { useAuth } from "../../hooks/useAuth";
 
 export function Store() {
   const { currentInstitution } = useInstitution();
+  const { userData } = useAuth();
   const [products, setProducts] = React.useState<ProductProps[]>([]);
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export function Store() {
         renderItem={({ item }) => <ShelfProduct data={item} key={item.id} />}
       />
       <S.CoinsContainer>
-        <S.CoinsText>35 moedas disponíveis</S.CoinsText>
+        <S.CoinsText>{userData?.coins} moedas disponíveis</S.CoinsText>
       </S.CoinsContainer>
     </>
   );
