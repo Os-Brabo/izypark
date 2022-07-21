@@ -28,7 +28,7 @@ export function Store() {
   return (
     <>
       <Header returnTo="back" />
-      <BlackTitle>FACENS - Loja</BlackTitle>
+      <BlackTitle>{currentInstitution?.initials} - Loja</BlackTitle>
       <FlatList
         style={{ padding: 15, marginTop: 30 }}
         data={products}
