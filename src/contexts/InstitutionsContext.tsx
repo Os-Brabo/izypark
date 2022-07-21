@@ -111,7 +111,8 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     const result = await getDocs(q);
     const data: Product[] = [];
     result.forEach((product) => {
-      data.push(product.data() as Product);
+      const info = product.data() as Product;
+      data.push({ ...info, id: product.id });
     });
     return data;
   }
