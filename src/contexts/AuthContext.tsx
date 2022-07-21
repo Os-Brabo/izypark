@@ -38,6 +38,7 @@ type UserData = {
     institutionName: string;
     blockName: string;
   } | null;
+  savedGaz: number;
 };
 
 type PasswordSignProps = {
@@ -82,7 +83,8 @@ export function AuthProvider({ children }: ProviderProps) {
       const userInitialData = {
         id: auth!.currentUser!.uid,
         favoriteInstitutions: [],
-        parkedAt: null
+        parkedAt: null,
+        savedGaz: 0
       };
       await setDoc(userDocRef, userInitialData);
       setUserData(userInitialData);
@@ -97,7 +99,6 @@ export function AuthProvider({ children }: ProviderProps) {
     const userData = docs.find(
       (doc) => doc.data().id === auth!.currentUser!.uid
     );
-    console.log(userData?.data());
     const data = userData?.data() as UserData;
     if (data?.parkedAt) {
       data.parkedAt.parkedAt = data.parkedAt.parkedAt.toDate();
