@@ -5,6 +5,7 @@ import { CreateVehicle } from "../screens/AddVehicle";
 import { Institutions } from "../screens/Institutions";
 import { DetailInstitutions } from "../screens/DetailInstitutions";
 import { Store } from "../screens/Store";
+import { Purchases } from "../screens/Purchases";
 const Stack = createNativeStackNavigator();
 
 export function PrivateRoutes() {
@@ -34,6 +35,11 @@ export function PrivateRoutes() {
       <Stack.Screen
         name="Institutions.Store"
         component={Store}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Purchases"
+        component={Purchases}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

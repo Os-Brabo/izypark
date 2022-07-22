@@ -1,9 +1,12 @@
 import {
   collection,
+  doc,
+  getDoc,
   getDocs,
   getFirestore,
   onSnapshot,
   query,
+  setDoc,
   Unsubscribe,
   where
 } from "firebase/firestore";
@@ -14,6 +17,7 @@ import React, {
   useState
 } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { v4 as uuidv4 } from "uuid";
 
 export interface Institution {
   address: string;
@@ -41,7 +45,15 @@ export interface Product {
   isDisabled: boolean;
   price: number;
   title: string;
+  quantity: number;
 }
+
+type PurchaseRegistry = Omit<Product, "id"> & {
+  id: string;
+  productId: string;
+  userId: string;
+  purchasedAt: Date;
+};
 
 type Props = {
   isLoading: boolean;
@@ -49,13 +61,14 @@ type Props = {
   favoriteInstitutions(): FormatedInstitution[];
   currentInstitution: CurrentInstitution | null;
   selectInstitution(id: string): Promise<void>;
+  handleProductPurchase(id: string): Promise<void>;
 };
 
 export const InstitutionContext = createContext({} as Props);
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
   const [isLoading, setIsLoading] = useState(false);
-  const { userData } = useAuth();
+  const { userData, user, updateUserData } = useAuth();
   const [institutions, setInstitutions] = useState<Institution[]>([]);
   const [formatedInstitutions, setFormatedInstitutions] = useState<
     FormatedInstitution[]
@@ -118,6 +131,60 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     return data;
   }
 
+  async function decreaseProductQuantity(id: string) {
+    if (!currentInstitution) return;
+    const productRef = doc(
+      firestore,
+      "institutions",
+      currentInstitution.id,
+      "products",
+      id
+    );
+    const result = await getDoc(productRef);
+    const data = result.data() as Product;
+    await setDoc(productRef, { ...data, quantity: data.quantity - 1 });
+  }
+
+  async function registerPurchase(product: Product) {
+    if (!currentInstitution || !user) return;
+    const id = uuidv4();
+    const purchasesRef = doc(
+      firestore,
+      "institutions",
+      currentInstitution.id,
+      "purchases",
+      id
+    );
+    const purchase: PurchaseRegistry = {
+      ...product,
+      id,
+      productId: product.id,
+      userId: user.uid,
+      purchasedAt: new Date()
+    };
+    await setDoc(purchasesRef, purchase);
+  }
+
+  async function handleProductPurchase(id: string): Promise<void> {
+    if (!currentInstitution || !userData) return;
+    const product = currentInstitution.products.find((p) => p.id === id);
+    if (!product) return;
+    await decreaseProductQuantity(id);
+    await registerPurchase(product);
+
+    await updateUserData({
+      coins: userData.coins - product.price,
+      boughtProducts: [
+        ...userData.boughtProducts,
+        {
+          ...product,
+          boughtAt: new Date(),
+          status: "waiting_withdrawal"
+        }
+      ]
+    });
+  }
+
   async function selectInstitution(id: string) {
     const institution = institutions.find(
       (institution) => institution.id === id
@@ -144,7 +211,8 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     institutions: formatedInstitutions,
     favoriteInstitutions,
     currentInstitution,
-    selectInstitution
+    selectInstitution,
+    handleProductPurchase
   };
   return (
     <InstitutionContext.Provider value={value}>

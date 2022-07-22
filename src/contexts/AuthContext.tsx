@@ -20,12 +20,18 @@ import React, {
 
 import { Either, left, right } from "../utils/Either";
 import { Block } from "./BlocksContext";
-import { Institution } from "./InstitutionsContext";
+import { Institution, Product } from "./InstitutionsContext";
+
+type UserBoughtProduct = Product & {
+  boughtAt: Date;
+  status: "withdrawn" | "waiting_withdrawal";
+};
 
 type UserData = {
   id: string;
   favoriteInstitutions: string[];
   coins: number;
+  boughtProducts: UserBoughtProduct[];
   parkedAt: {
     institutionId: string;
     blockId: string;
@@ -55,6 +61,7 @@ type AuthContextProps = {
   ): Promise<Either<Error, null>>;
   clearParkedCar(): Promise<Either<Error, null>>;
   favoriteInstitution(institutionId: string): Promise<void>;
+  updateUserData(data: Partial<UserData>): Promise<void>;
 };
 
 type ProviderProps = {
@@ -77,7 +84,8 @@ export function AuthProvider({ children }: ProviderProps) {
         id: auth!.currentUser!.uid,
         favoriteInstitutions: [],
         parkedAt: null,
-        coins: 0
+        coins: 0,
+        boughtProducts: []
       };
       await setDoc(userDocRef, userInitialData);
       setUserData(userInitialData);
@@ -109,6 +117,10 @@ export function AuthProvider({ children }: ProviderProps) {
     if (data.coins === undefined) {
       data.coins = 0;
       await updateUserData({ coins: 0 });
+    }
+    if (data.boughtProducts === undefined) {
+      data.boughtProducts = [];
+      await updateUserData({ boughtProducts: [] });
     }
     if (data?.parkedAt) {
       data.parkedAt.parkedAt = (data.parkedAt.parkedAt as any).toDate();
@@ -237,7 +249,8 @@ export function AuthProvider({ children }: ProviderProps) {
       signOut,
       setParkedCar,
       clearParkedCar,
-      favoriteInstitution
+      favoriteInstitution,
+      updateUserData
     }),
     [
       user,
@@ -248,7 +261,8 @@ export function AuthProvider({ children }: ProviderProps) {
       signOut,
       setParkedCar,
       clearParkedCar,
-      favoriteInstitution
+      favoriteInstitution,
+      updateUserData
     ]
   );
 
