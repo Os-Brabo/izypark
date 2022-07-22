@@ -11,7 +11,7 @@ export function Purchases() {
 
   return (
     <>
-      <Header />
+      <Header returnTo="back" />
       <BlackTitle>Minhas Compras</BlackTitle>
       <FlatList
         style={{ padding: 15, marginTop: 30 }}
