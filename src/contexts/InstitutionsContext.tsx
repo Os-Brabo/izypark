@@ -138,7 +138,9 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
   useEffect(() => {
     formatInstitutions();
   }, [userData?.favoriteInstitutions]);
-
+  useEffect(() => {
+    if (userData.parkedAt) selectInstitution(userData.parkedAt?.institutionId);
+  }, [userData?.parkedAt]);
   const value = {
     isLoading,
     institutions: formatedInstitutions,
