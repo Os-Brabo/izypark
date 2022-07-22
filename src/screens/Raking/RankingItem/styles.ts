@@ -1,10 +1,14 @@
 import styled from "styled-components/native";
 
-export const ItemContainer = styled.View`
+interface ContainerProps {
+  isCurrent: boolean;
+}
+
+export const ItemContainer = styled.View<ContainerProps>`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 10px;
-  border-color: #e5e5e5;
+  border-color: ${({ isCurrent }) => (isCurrent ? "#ff9000" : "#eee")};
   border-style: solid;
   border-bottom-width: 2px;
   padding-bottom: 15px;
