@@ -8,7 +8,7 @@ import * as S from "./styles";
 export function Home() {
   const { userData } = useAuth();
   const economizedGaz = userData.savedGaz.toFixed(1);
-  const availableCoins = userData.coins.toFixed(1);
+  const availableCoins = userData.coins;
   const parkedPlace = userData.parkedAt;
 
   return (
