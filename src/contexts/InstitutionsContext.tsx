@@ -145,8 +145,8 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     await setDoc(productRef, { ...data, quantity: data.quantity - 1 });
   }
 
-  async function registerPurchase(product: Product) {
-    if (!currentInstitution || !user) return;
+  async function registerPurchase(product: Product): Promise<string> {
+    if (!currentInstitution || !user) return "";
     const id = uuidv4();
     const purchasesRef = doc(
       firestore,
@@ -163,14 +163,15 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
       purchasedAt: new Date()
     };
     await setDoc(purchasesRef, purchase);
+    return id;
   }
 
-  async function handleProductPurchase(id: string): Promise<void> {
+  async function handleProductPurchase(prodId: string): Promise<void> {
     if (!currentInstitution || !userData) return;
-    const product = currentInstitution.products.find((p) => p.id === id);
+    const product = currentInstitution.products.find((p) => p.id === prodId);
     if (!product) return;
-    await decreaseProductQuantity(id);
-    await registerPurchase(product);
+    await decreaseProductQuantity(prodId);
+    const id = await registerPurchase(product);
 
     await updateUserData({
       coins: userData.coins - product.price,
@@ -178,6 +179,8 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
         ...userData.boughtProducts,
         {
           ...product,
+          id,
+          productId: prodId,
           boughtAt: new Date(),
           status: "waiting_withdrawal"
         }

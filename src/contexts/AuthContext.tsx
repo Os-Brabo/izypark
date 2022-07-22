@@ -22,7 +22,9 @@ import { Either, left, right } from "../utils/Either";
 import { Block } from "./BlocksContext";
 import { Institution, Product } from "./InstitutionsContext";
 
-type UserBoughtProduct = Product & {
+export type UserBoughtProduct = Product & {
+  id: string;
+  productId: string;
   boughtAt: Date;
   status: "withdrawn" | "waiting_withdrawal";
 };
@@ -125,6 +127,11 @@ export function AuthProvider({ children }: ProviderProps) {
     if (data.boughtProducts === undefined) {
       data.boughtProducts = [];
       await updateUserData({ boughtProducts: [] });
+    } else {
+      data.boughtProducts = data.boughtProducts.map((prod) => ({
+        ...prod,
+        boughtAt: (prod.boughtAt as any).toDate()
+      }));
     }
     if (data.savedGaz === undefined) {
       data.savedGaz = 0;

@@ -7,9 +7,9 @@ import {
 } from "@react-navigation/drawer";
 import { Home } from "../screens/Home";
 import { Vehicles } from "../screens/MyVehicles";
-import { Store } from "../screens/Store";
 import { Raking } from "../screens/Raking";
 import { useAuth } from "../hooks/useAuth";
+import { Purchases } from "../screens/Purchases";
 const Drawer = createDrawerNavigator();
 export function DrawerContent() {
   const auth = useAuth();
@@ -37,9 +37,9 @@ export function DrawerContent() {
         options={{ headerShown: false }}
       />
       <Drawer.Screen
-        name="Shop"
-        component={Store}
-        options={{ title: "Loja", headerShown: false }}
+        name="Purchases"
+        component={Purchases}
+        options={{ title: "Compras", headerShown: false }}
       />
       <Drawer.Screen
         name="Ranking"
