@@ -149,7 +149,7 @@ export function AuthProvider({ children }: ProviderProps) {
     block: Block
   ): Promise<Either<Error, null>> {
     if (!userData) return right(null);
-    setUserData({
+    const newUserData = {
       ...userData,
       parkedAt: {
         institutionId: institution.id,
@@ -158,9 +158,10 @@ export function AuthProvider({ children }: ProviderProps) {
         blockName: block.name,
         parkedAt: new Date()
       }
-    } as UserData);
+    } as UserData;
     const userDocRef = doc(firestore, "usersData", userData.id);
-    await setDoc(userDocRef, userData);
+    await setDoc(userDocRef, newUserData);
+    setUserData(newUserData);
     return right(null);
   }
   async function clearParkedCar(): Promise<Either<Error, null>> {
