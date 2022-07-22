@@ -1,9 +1,11 @@
 import {
   collection,
+  getDocs,
   getFirestore,
   onSnapshot,
   query,
-  Unsubscribe
+  Unsubscribe,
+  where
 } from "firebase/firestore";
 import React, {
   createContext,
@@ -28,12 +30,25 @@ interface FormatedInstitution {
   isFavorite: boolean;
 }
 
+type CurrentInstitution = Institution & {
+  products: Product[];
+};
+
+export interface Product {
+  id: string;
+  description: string;
+  image: string;
+  isDisabled: boolean;
+  price: number;
+  title: string;
+}
+
 type Props = {
   isLoading: boolean;
   institutions: FormatedInstitution[];
   favoriteInstitutions(): FormatedInstitution[];
-  currentInstitution: Institution | null;
-  selectInstitution(id: string): void;
+  currentInstitution: CurrentInstitution | null;
+  selectInstitution(id: string): Promise<void>;
 };
 
 export const InstitutionContext = createContext({} as Props);
@@ -46,7 +61,7 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     FormatedInstitution[]
   >([]);
   const [currentInstitution, setCurrentInstitution] =
-    useState<Institution | null>(null);
+    useState<CurrentInstitution | null>(null);
   const firestore = getFirestore();
   let unsubscribe: Unsubscribe;
 
@@ -86,12 +101,30 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     unsubscribe = unsub;
   }
 
-  function selectInstitution(id: string) {
+  async function fetchProducts(institutionId: string) {
+    const productsRef = collection(
+      firestore,
+      "institutions",
+      institutionId,
+      "products"
+    );
+    const q = query(productsRef, where("isDisabled", "==", false));
+    const result = await getDocs(q);
+    const data: Product[] = [];
+    result.forEach((product) => {
+      const info = product.data() as Product;
+      data.push({ ...info, id: product.id });
+    });
+    return data;
+  }
+
+  async function selectInstitution(id: string) {
     const institution = institutions.find(
       (institution) => institution.id === id
     );
     if (!institution) return;
-    setCurrentInstitution(institution);
+    const products = await fetchProducts(id);
+    setCurrentInstitution({ ...institution, products });
   }
 
   function favoriteInstitutions(): FormatedInstitution[] {

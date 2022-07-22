@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 import * as S from "./styles";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useInstitution } from "../../../hooks/useInstitution";
 import { useAuth } from "../../../hooks/useAuth";
-import { ActivityIndicator } from "react-native-paper";
 
 export interface Institution {
   id: string;
@@ -36,9 +35,16 @@ export function InstitutionItem({ institution }: Props) {
       setIsLoading(false);
     }
   }
-  function handleNavigateToDetail() {
-    selectInstitution(institution.id);
-    navigation.navigate("Institutions.Detail" as never, {} as never);
+  async function handleNavigateToDetail() {
+    setIsLoading(true);
+    try {
+      await selectInstitution(institution.id);
+      navigation.navigate("Institutions.Detail" as never, {} as never);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   }
   return (
     <S.Container>

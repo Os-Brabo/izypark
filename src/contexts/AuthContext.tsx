@@ -8,13 +8,7 @@ import {
   signInWithCredential,
   AuthCredential
 } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDocs,
-  getFirestore,
-  setDoc
-} from "firebase/firestore";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import React, {
   createContext,
   ReactNode,
@@ -31,6 +25,7 @@ import { Institution } from "./InstitutionsContext";
 type UserData = {
   id: string;
   favoriteInstitutions: string[];
+  coins: number;
   parkedAt: {
     institutionId: string;
     blockId: string;
@@ -75,7 +70,6 @@ export function AuthProvider({ children }: ProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState<UserData>({} as UserData);
   const firestore = getFirestore();
-  // let unsubscribe: Unsubscribe;
 
   async function createUserData() {
     try {
@@ -84,7 +78,8 @@ export function AuthProvider({ children }: ProviderProps) {
         id: auth!.currentUser!.uid,
         favoriteInstitutions: [],
         parkedAt: null,
-        savedGaz: 0
+        savedGaz: 0,
+        coins: 0
       };
       await setDoc(userDocRef, userInitialData);
       setUserData(userInitialData);
@@ -93,43 +88,63 @@ export function AuthProvider({ children }: ProviderProps) {
     }
   }
 
-  async function generateUserData() {
-    const usersRef = collection(firestore, "usersData");
-    const { docs } = await getDocs(usersRef);
-    const userData = docs.find(
-      (doc) => doc.data().id === auth!.currentUser!.uid
-    );
-    const data = userData?.data() as UserData;
-    if (data?.parkedAt) {
-      data.parkedAt.parkedAt = data.parkedAt.parkedAt.toDate();
+  async function updateUserData(data: Partial<UserData>) {
+    if (!auth.currentUser || !userData) return;
+    try {
+      const userDocRef = doc(firestore, "usersData", auth.currentUser.uid);
+      const newData = { ...userData, ...data };
+      await setDoc(userDocRef, newData);
+      setUserData(newData);
+    } catch (error) {
+      console.error(error);
     }
-    console.log("@generateUserdata", data);
-    if (userData) setUserData(data as UserData);
-    else createUserData();
-  }
-  async function favoriteInstitution(instituionId: string): Promise<void> {
-    if (!userData) return;
-    const newUserData = { ...userData };
-    if (userData.favoriteInstitutions.includes(instituionId)) {
-      // remove from favorites
-      newUserData.favoriteInstitutions = userData.favoriteInstitutions.filter(
-        (id) => id !== instituionId
-      );
-    } else {
-      // add to favorites
-      newUserData.favoriteInstitutions = [
-        ...userData.favoriteInstitutions,
-        instituionId
-      ];
-    }
-    setUserData(newUserData);
-    const userDocRef = doc(firestore, "usersData", userData.id);
-    await setDoc(userDocRef, userData);
   }
 
-  async function setParkedCar(institution: Institution, block: Block) {
-    if (!userData) return;
-    console.log("000 set parkedCar", userData);
+  async function generateUserData() {
+    if (!auth.currentUser) return;
+    const userDocRef = doc(firestore, "usersData", auth.currentUser.uid);
+    const snap = await getDoc(userDocRef);
+    if (!snap.exists()) {
+      return createUserData();
+    }
+    const data = snap.data() as UserData;
+    if (data.coins === undefined) {
+      data.coins = 0;
+      await updateUserData({ coins: 0 });
+    }
+    if (data?.parkedAt) {
+      data.parkedAt.parkedAt = (data.parkedAt.parkedAt as any).toDate();
+    }
+    setUserData(data as UserData);
+  }
+  const favoriteInstitution = useCallback(
+    async (instituionId: string) => {
+      if (!userData) return;
+      const newUserData = { ...userData };
+      if (userData.favoriteInstitutions.includes(instituionId)) {
+        // remove from favorites
+        newUserData.favoriteInstitutions = userData.favoriteInstitutions.filter(
+          (id) => id !== instituionId
+        );
+      } else {
+        // add to favorites
+        newUserData.favoriteInstitutions = [
+          ...userData.favoriteInstitutions,
+          instituionId
+        ];
+      }
+      setUserData(newUserData);
+      const userDocRef = doc(firestore, "usersData", userData.id);
+      await setDoc(userDocRef, newUserData);
+    },
+    [userData]
+  );
+
+  async function setParkedCar(
+    institution: Institution,
+    block: Block
+  ): Promise<Either<Error, null>> {
+    if (!userData) return right(null);
     setUserData({
       ...userData,
       parkedAt: {
@@ -144,8 +159,8 @@ export function AuthProvider({ children }: ProviderProps) {
     await setDoc(userDocRef, userData);
     return right(null);
   }
-  async function clearParkedCar() {
-    if (!userData) return;
+  async function clearParkedCar(): Promise<Either<Error, null>> {
+    if (!userData) return right(null);
     const savedGaz = userData.savedGaz + 10;
     setUserData({
       ...userData,
