@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { FlatList } from "react-native";
-import { Text } from "react-native-paper";
+import React from "react";
+import { FlatList, Text } from "react-native";
 import { FetchInstitutionsForm } from "../../components/FetchInstitutionsForm";
 import { Header } from "../../components/Header";
 import { BlackTitle } from "../../components/shared/BlackTitle";
