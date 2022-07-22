@@ -112,6 +112,10 @@ export function AuthProvider({ children }: ProviderProps) {
       data.coins = 0;
       await updateUserData({ coins: 0 });
     }
+    if (data.savedGaz === undefined) {
+      data.savedGaz = 0;
+      await updateUserData({ savedGaz: 0 });
+    }
     if (data?.parkedAt) {
       data.parkedAt.parkedAt = (data.parkedAt.parkedAt as any).toDate();
     }
@@ -162,13 +166,13 @@ export function AuthProvider({ children }: ProviderProps) {
   async function clearParkedCar(): Promise<Either<Error, null>> {
     if (!userData) return right(null);
     const savedGaz = userData.savedGaz + 10;
+    const userDocRef = doc(firestore, "usersData", userData.id);
+    await setDoc(userDocRef, { ...userData, parkedAt: null, savedGaz });
     setUserData({
       ...userData,
       parkedAt: null,
       savedGaz
     } as UserData);
-    const userDocRef = doc(firestore, "usersData", userData.id);
-    await setDoc(userDocRef, userData);
     return right(null);
   }
 

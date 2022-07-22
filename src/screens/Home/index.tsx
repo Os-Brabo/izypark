@@ -1,6 +1,5 @@
 import React from "react";
 import { Header } from "../../components/Header";
-import { BlackTitle } from "../../components/shared/BlackTitle";
 import { useAuth } from "../../hooks/useAuth";
 import { ListInstitutions } from "./ListInstitutions";
 import { ParkedPlace } from "./ParkedPlace";
@@ -8,9 +7,8 @@ import * as S from "./styles";
 
 export function Home() {
   const { userData } = useAuth();
-  console.log(userData);
-  const economizedGaz = userData?.savedGaz.toFixed(1);
-  const availableCoins = 35;
+  const economizedGaz = userData.savedGaz.toFixed(1);
+  const availableCoins = userData.coins.toFixed(1);
   const parkedPlace = userData.parkedAt;
 
   return (
