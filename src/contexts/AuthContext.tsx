@@ -103,7 +103,7 @@ export function AuthProvider({ children }: ProviderProps) {
     if (data?.parkedAt) {
       data.parkedAt.parkedAt = data.parkedAt.parkedAt.toDate();
     }
-
+    console.log("@generateUserdata", data);
     if (userData) setUserData(data as UserData);
     else createUserData();
   }
@@ -129,6 +129,7 @@ export function AuthProvider({ children }: ProviderProps) {
 
   async function setParkedCar(institution: Institution, block: Block) {
     if (!userData) return;
+    console.log("000 set parkedCar", userData);
     setUserData({
       ...userData,
       parkedAt: {
@@ -145,9 +146,11 @@ export function AuthProvider({ children }: ProviderProps) {
   }
   async function clearParkedCar() {
     if (!userData) return;
+    const savedGaz = userData.savedGaz + 10;
     setUserData({
       ...userData,
-      parkedAt: null
+      parkedAt: null,
+      savedGaz
     } as UserData);
     const userDocRef = doc(firestore, "usersData", userData.id);
     await setDoc(userDocRef, userData);
