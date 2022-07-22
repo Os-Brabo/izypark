@@ -40,6 +40,7 @@ type UserData = {
     blockName: string;
   } | null;
   savedGaz: number;
+  name: string;
 };
 
 type PasswordSignProps = {
@@ -87,7 +88,8 @@ export function AuthProvider({ children }: ProviderProps) {
         parkedAt: null,
         boughtProducts: [],
         savedGaz: 0,
-        coins: 0
+        coins: 0,
+        name: auth.currentUser?.displayName || "Anônimo"
       };
       await setDoc(userDocRef, userInitialData);
       setUserData(userInitialData);
@@ -123,9 +125,13 @@ export function AuthProvider({ children }: ProviderProps) {
     if (data.boughtProducts === undefined) {
       data.boughtProducts = [];
       await updateUserData({ boughtProducts: [] });
+    }
     if (data.savedGaz === undefined) {
       data.savedGaz = 0;
       await updateUserData({ savedGaz: 0 });
+    }
+    if (data.name === undefined) {
+      await updateUserData({ name: auth.currentUser.displayName || "Anônimo" });
     }
     if (data?.parkedAt) {
       data.parkedAt.parkedAt = (data.parkedAt.parkedAt as any).toDate();
