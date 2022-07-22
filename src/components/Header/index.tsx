@@ -15,6 +15,10 @@ export function Header({ returnTo }: Props) {
   }
   function handleReturn() {
     if (!returnTo) return;
+    if (returnTo === "back") {
+      navigation.goBack();
+      return;
+    }
     navigation.navigate({ name: returnTo });
   }
   return (

@@ -8,13 +8,7 @@ import {
   signInWithCredential,
   AuthCredential
 } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDocs,
-  getFirestore,
-  setDoc
-} from "firebase/firestore";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import React, {
   createContext,
   ReactNode,
@@ -26,11 +20,18 @@ import React, {
 
 import { Either, left, right } from "../utils/Either";
 import { Block } from "./BlocksContext";
-import { Institution } from "./InstitutionsContext";
+import { Institution, Product } from "./InstitutionsContext";
+
+type UserBoughtProduct = Product & {
+  boughtAt: Date;
+  status: "withdrawn" | "waiting_withdrawal";
+};
 
 type UserData = {
   id: string;
   favoriteInstitutions: string[];
+  coins: number;
+  boughtProducts: UserBoughtProduct[];
   parkedAt: {
     institutionId: string;
     blockId: string;
@@ -38,6 +39,8 @@ type UserData = {
     institutionName: string;
     blockName: string;
   } | null;
+  savedGaz: number;
+  name: string;
 };
 
 type PasswordSignProps = {
@@ -48,7 +51,7 @@ type PasswordSignProps = {
 type AuthContextProps = {
   isAuthenticated: boolean;
   user: FirebaseUser | null;
-  userData: UserData | null;
+  userData: UserData;
   isLoading: boolean;
   credentialSignIn(credential: AuthCredential): Promise<Either<Error, null>>;
   signUpWithPassword(props: PasswordSignProps): Promise<Either<Error, null>>;
@@ -60,6 +63,7 @@ type AuthContextProps = {
   ): Promise<Either<Error, null>>;
   clearParkedCar(): Promise<Either<Error, null>>;
   favoriteInstitution(institutionId: string): Promise<void>;
+  updateUserData(data: Partial<UserData>): Promise<void>;
 };
 
 type ProviderProps = {
@@ -72,9 +76,8 @@ export function AuthProvider({ children }: ProviderProps) {
   const auth = getAuth();
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<UserData>({} as UserData);
   const firestore = getFirestore();
-  // let unsubscribe: Unsubscribe;
 
   async function createUserData() {
     try {
@@ -82,7 +85,11 @@ export function AuthProvider({ children }: ProviderProps) {
       const userInitialData = {
         id: auth!.currentUser!.uid,
         favoriteInstitutions: [],
-        parkedAt: null
+        parkedAt: null,
+        boughtProducts: [],
+        savedGaz: 0,
+        coins: 0,
+        name: auth.currentUser?.displayName || "Anônimo"
       };
       await setDoc(userDocRef, userInitialData);
       setUserData(userInitialData);
@@ -91,44 +98,75 @@ export function AuthProvider({ children }: ProviderProps) {
     }
   }
 
+  async function updateUserData(data: Partial<UserData>) {
+    if (!auth.currentUser || !userData) return;
+    try {
+      const userDocRef = doc(firestore, "usersData", auth.currentUser.uid);
+      const newData = { ...userData, ...data };
+      await setDoc(userDocRef, newData);
+      setUserData(newData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async function generateUserData() {
-    const usersRef = collection(firestore, "usersData");
-    const { docs } = await getDocs(usersRef);
-    const userData = docs.find(
-      (doc) => doc.data().id === auth!.currentUser!.uid
-    );
-    console.log(userData?.data());
-    const data = userData?.data() as UserData;
+    if (!auth.currentUser) return;
+    const userDocRef = doc(firestore, "usersData", auth.currentUser.uid);
+    const snap = await getDoc(userDocRef);
+    if (!snap.exists()) {
+      return createUserData();
+    }
+    const data = snap.data() as UserData;
+    if (data.coins === undefined) {
+      data.coins = 0;
+      await updateUserData({ coins: 0 });
+    }
+    if (data.boughtProducts === undefined) {
+      data.boughtProducts = [];
+      await updateUserData({ boughtProducts: [] });
+    }
+    if (data.savedGaz === undefined) {
+      data.savedGaz = 0;
+      await updateUserData({ savedGaz: 0 });
+    }
+    if (data.name === undefined) {
+      await updateUserData({ name: auth.currentUser.displayName || "Anônimo" });
+    }
     if (data?.parkedAt) {
-      data.parkedAt.parkedAt = data.parkedAt.parkedAt.toDate();
+      data.parkedAt.parkedAt = (data.parkedAt.parkedAt as any).toDate();
     }
-
-    if (userData) setUserData(data as UserData);
-    else createUserData();
+    setUserData(data as UserData);
   }
-  async function favoriteInstitution(instituionId: string): Promise<void> {
-    if (!userData) return;
-    const newUserData = { ...userData };
-    if (userData.favoriteInstitutions.includes(instituionId)) {
-      // remove from favorites
-      newUserData.favoriteInstitutions = userData.favoriteInstitutions.filter(
-        (id) => id !== instituionId
-      );
-    } else {
-      // add to favorites
-      newUserData.favoriteInstitutions = [
-        ...userData.favoriteInstitutions,
-        instituionId
-      ];
-    }
-    setUserData(newUserData);
-    const userDocRef = doc(firestore, "usersData", userData.id);
-    await setDoc(userDocRef, userData);
-  }
+  const favoriteInstitution = useCallback(
+    async (instituionId: string) => {
+      if (!userData) return;
+      const newUserData = { ...userData };
+      if (userData.favoriteInstitutions.includes(instituionId)) {
+        // remove from favorites
+        newUserData.favoriteInstitutions = userData.favoriteInstitutions.filter(
+          (id) => id !== instituionId
+        );
+      } else {
+        // add to favorites
+        newUserData.favoriteInstitutions = [
+          ...userData.favoriteInstitutions,
+          instituionId
+        ];
+      }
+      setUserData(newUserData);
+      const userDocRef = doc(firestore, "usersData", userData.id);
+      await setDoc(userDocRef, newUserData);
+    },
+    [userData]
+  );
 
-  async function setParkedCar(institution: Institution, block: Block) {
-    if (!userData) return;
-    setUserData({
+  async function setParkedCar(
+    institution: Institution,
+    block: Block
+  ): Promise<Either<Error, null>> {
+    if (!userData) return right(null);
+    const newUserData = {
       ...userData,
       parkedAt: {
         institutionId: institution.id,
@@ -137,25 +175,27 @@ export function AuthProvider({ children }: ProviderProps) {
         blockName: block.name,
         parkedAt: new Date()
       }
-    } as UserData);
+    } as UserData;
     const userDocRef = doc(firestore, "usersData", userData.id);
-    await setDoc(userDocRef, userData);
+    await setDoc(userDocRef, newUserData);
+    setUserData(newUserData);
     return right(null);
   }
-  async function clearParkedCar() {
-    if (!userData) return;
+  async function clearParkedCar(): Promise<Either<Error, null>> {
+    if (!userData) return right(null);
+    const savedGaz = userData.savedGaz + 10;
+    const userDocRef = doc(firestore, "usersData", userData.id);
+    await setDoc(userDocRef, { ...userData, parkedAt: null, savedGaz });
     setUserData({
       ...userData,
-      parkedAt: null
+      parkedAt: null,
+      savedGaz
     } as UserData);
-    const userDocRef = doc(firestore, "usersData", userData.id);
-    await setDoc(userDocRef, userData);
     return right(null);
   }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (responseUser) => {
-      console.log(responseUser);
       await generateUserData();
       setUser(responseUser);
       setIsLoading(false);
@@ -222,7 +262,8 @@ export function AuthProvider({ children }: ProviderProps) {
       signOut,
       setParkedCar,
       clearParkedCar,
-      favoriteInstitution
+      favoriteInstitution,
+      updateUserData
     }),
     [
       user,
@@ -233,7 +274,8 @@ export function AuthProvider({ children }: ProviderProps) {
       signOut,
       setParkedCar,
       clearParkedCar,
-      favoriteInstitution
+      favoriteInstitution,
+      updateUserData
     ]
   );
 

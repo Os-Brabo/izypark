@@ -6,11 +6,13 @@ export const InstitutionsContainer = styled.View`
 
 export const FavoriteInstitutionContainer = styled.TouchableOpacity`
   background-color: #3a3a3a;
-  padding: 20px 12px;
+  padding: 0px 12px;
   flex-direction: row;
-  border-radius: 4px;
+  width: 100%;
+  height: 80px;
   align-items: center;
-  /* max-width: 80%; */
+  justify-content: center;
+  border-radius: 4px;
   margin: 0 auto;
 `;
 
@@ -19,7 +21,6 @@ export const FavoriteInstitutionTitle = styled.Text`
   font-size: 26px;
   font-weight: bold;
   text-transform: uppercase;
-  max-height: 30px;
   flex: 1;
   text-align: left;
   font-family: "RobotoBlack";
