@@ -7,6 +7,7 @@ import {
   onSnapshot,
   query,
   setDoc,
+  startAt,
   Unsubscribe,
   where
 } from "firebase/firestore";
@@ -28,7 +29,7 @@ export interface Institution {
   state: string;
   id: string;
 }
-interface FormatedInstitution {
+export interface FormatedInstitution {
   name: string;
   id: string;
   isFavorite: boolean;
@@ -62,6 +63,8 @@ type Props = {
   currentInstitution: CurrentInstitution | null;
   selectInstitution(id: string): Promise<void>;
   handleProductPurchase(id: string): Promise<void>;
+  fetchInstitutions(searchTerm?: string): void;
+  findInstitutions(searchTerm: string): Promise<FormatedInstitution[]>;
 };
 
 export const InstitutionContext = createContext({} as Props);
@@ -89,18 +92,17 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     return true;
   }
 
-  function formatInstitutions() {
-    const formated: FormatedInstitution[] = institutions.map((institution) => {
+  function formatInstitutions(data: Institution[]): FormatedInstitution[] {
+    const formated: FormatedInstitution[] = data.map((institution) => {
       return {
         id: institution.id,
         isFavorite: isFavorite(institution.id),
         name: institution.initials
       };
     });
-
-    setFormatedInstitutions(formated);
+    return formated;
   }
-  function fetchInstitutions() {
+  function fetchInstitutions(searchTerm?: string): void {
     const institutionsRef = collection(firestore, "institutions");
     const q = query(institutionsRef);
     const unsub = onSnapshot(q, (firebaseData) => {
@@ -112,6 +114,16 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
       setInstitutions(data);
     });
     unsubscribe = unsub;
+  }
+
+  async function findInstitutions(
+    searchTerm: string
+  ): Promise<FormatedInstitution[]> {
+    const result = institutions.filter((institution) =>
+      institution.initials.toLowerCase().startsWith(searchTerm.toLowerCase())
+    );
+    console.log(result);
+    return formatInstitutions(result);
   }
 
   async function fetchProducts(institutionId: string) {
@@ -206,8 +218,9 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     return unsubscribe;
   }, []);
   useEffect(() => {
-    formatInstitutions();
-  }, [userData?.favoriteInstitutions]);
+    const formated = formatInstitutions(institutions);
+    setFormatedInstitutions(formated);
+  }, [userData?.favoriteInstitutions, institutions]);
   useEffect(() => {
     if (userData.parkedAt) selectInstitution(userData.parkedAt?.institutionId);
   }, [userData?.parkedAt]);
@@ -217,7 +230,8 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     favoriteInstitutions,
     currentInstitution,
     selectInstitution,
-    handleProductPurchase
+    handleProductPurchase,
+    findInstitutions
   };
   return (
     <InstitutionContext.Provider value={value}>
