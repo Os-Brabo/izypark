@@ -5,6 +5,7 @@ import { Home } from "../screens/Home";
 import { Vehicles } from "../screens/MyVehicles";
 import { Raking } from "../screens/Raking";
 import { StackContent } from "./StackContent";
+import { ReportIncident } from "../screens/ReportIncidents";
 
 const Drawer = createDrawerNavigator();
 
@@ -29,6 +30,11 @@ export function PrivateRoutes() {
       <Drawer.Screen
         name="Ranking"
         component={Raking}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name="incident"
+        component={ReportIncident}
         options={{ headerShown: false }}
       />
       <Drawer.Screen
