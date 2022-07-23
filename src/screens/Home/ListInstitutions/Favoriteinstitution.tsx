@@ -4,6 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useInstitution } from "../../../hooks/useInstitution";
 import { ActivityIndicator } from "react-native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 interface Props {
   title: string;
@@ -13,12 +14,12 @@ interface Props {
 export function FavoriteInstitution({ title, id }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const { selectInstitution } = useInstitution();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   async function handleNavigateToDetail() {
     setIsLoading(true);
     try {
       await selectInstitution(id);
-      navigation.navigate("Institutions.Detail" as never, {} as never);
+      navigation.navigate("Stack", { screen: "Institutions.Detail" });
     } catch (err) {
       console.error(err);
     } finally {

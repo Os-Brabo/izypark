@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React from "react";
 import { View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
@@ -11,10 +12,10 @@ import * as S from "./styles";
 
 export function ListInstitutions() {
   const { favoriteInstitutions } = useInstitution();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const institutions = favoriteInstitutions();
   function handleGetInstitutions() {
-    navigation.navigate("Institutions.List");
+    navigation.navigate("Stack", { screen: "Institutions.List" });
   }
   return (
     <S.InstitutionsContainer>
