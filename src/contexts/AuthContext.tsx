@@ -48,6 +48,7 @@ type UserData = {
 type PasswordSignProps = {
   email: string;
   password: string;
+  name: string;
 };
 
 type AuthContextProps = {
@@ -226,10 +227,13 @@ export function AuthProvider({ children }: ProviderProps) {
   const signUpWithPassword = useCallback(
     async ({
       email,
-      password
+      password,
+      name
     }: PasswordSignProps): Promise<Either<Error, null>> => {
       try {
         await createUserWithEmailAndPassword(auth, email, password);
+        await createUserData();
+        await updateUserData({ name });
         return right(null);
       } catch (err: any) {
         return left(new Error(err.message));
