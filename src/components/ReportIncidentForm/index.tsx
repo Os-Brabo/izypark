@@ -1,52 +1,36 @@
 import React from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { Formik } from "formik";
-import {
-  FieldContainer,
-  FieldInput,
-  FieldLabel,
-  FieldSelect
-} from "../shared/Form/styles";
+import { FieldContainer, FieldInput, FieldLabel } from "../shared/Form/styles";
+import { DefaultButton } from "../Buttons/DefaultButton";
 
 type Props = {
-  onSubmit: () => void;
+  onSubmit: (carPlate: string) => void;
 };
 
-/**
- * Reportar incidente:
- * 
- * tipo de incidente: 
-*    -> Problema com outro veículo
-*    -> Problema de Segurança
-*    -> Chamar a Segurança
-*    -> Outro
+export function ReportIncidentForm({ onSubmit }: Props) {
+  const initialValues = { carPlate: "" };
+  function handleOnSubmit({ carPlate }: { carPlate: string }) {
+    onSubmit(carPlate);
+  }
 
-  * instituição: -> Selecionar a Instituição
- */
-
-export function ReportIncidentForm() {
   return (
-    <>
-      <View>
-        <FieldContainer>
-          <FieldLabel>Instituição</FieldLabel>
-          <FieldSelect>
-            <FieldSelect.Item label="Selecionar a Instituição" value="" />
-            <FieldSelect.Item label="Instituição 1" value="1" />
-          </FieldSelect>
-        </FieldContainer>
-        <FieldContainer>
-          <FieldLabel>Tipo de Incidente</FieldLabel>
-          <FieldSelect>
-            <FieldSelect.Item label="Selecionar a Instituição" value="" />
-            <FieldSelect.Item label="Instituição 1" value="1" />
-          </FieldSelect>
-        </FieldContainer>
-        <FieldContainer>
-          <FieldLabel>Problema com outro veículo</FieldLabel>
-          <FieldInput placeholder="Placa do veículo" />
-        </FieldContainer>
-      </View>
-    </>
+    <Formik initialValues={initialValues} onSubmit={handleOnSubmit}>
+      {({ handleSubmit, handleBlur, handleChange, values, errors }) => (
+        <View>
+          <FieldContainer>
+            <FieldLabel>Problema com outro veículo</FieldLabel>
+            <FieldInput
+              placeholder="Placa do veículo"
+              value={values.carPlate}
+              onChangeText={handleChange("carPlate")}
+              onBlur={handleBlur("carPlate")}
+            />
+            <Text>{errors.carPlate}</Text>
+          </FieldContainer>
+          <DefaultButton label="Enviar" onPress={handleSubmit} />
+        </View>
+      )}
+    </Formik>
   );
 }
