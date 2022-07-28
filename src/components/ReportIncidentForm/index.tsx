@@ -1,23 +1,28 @@
 import React from "react";
-import { Text, View } from "react-native";
-import { Formik } from "formik";
+import { Keyboard, Text, View } from "react-native";
+import { Formik, FormikHelpers } from "formik";
 import { FieldContainer, FieldInput, FieldLabel } from "../shared/Form/styles";
 import { DefaultButton } from "../Buttons/DefaultButton";
+import * as S from "./styles";
 
 type Props = {
   onSubmit: (carPlate: string) => void;
 };
 
+type FormHelpers = FormikHelpers<{ carPlate: string }>;
+type FormValues = { carPlate: string };
 export function ReportIncidentForm({ onSubmit }: Props) {
   const initialValues = { carPlate: "" };
-  function handleOnSubmit({ carPlate }: { carPlate: string }) {
+  function handleSubmit({ carPlate }: FormValues, { resetForm }: FormHelpers) {
+    Keyboard.dismiss();
     onSubmit(carPlate);
+    resetForm();
   }
 
   return (
-    <Formik initialValues={initialValues} onSubmit={handleOnSubmit}>
+    <Formik initialValues={initialValues} onSubmit={handleSubmit} re>
       {({ handleSubmit, handleBlur, handleChange, values, errors }) => (
-        <View>
+        <S.Container>
           <FieldContainer>
             <FieldLabel>Problema com outro veículo</FieldLabel>
             <FieldInput
@@ -29,7 +34,7 @@ export function ReportIncidentForm({ onSubmit }: Props) {
             <Text>{errors.carPlate}</Text>
           </FieldContainer>
           <DefaultButton label="Enviar" onPress={handleSubmit} />
-        </View>
+        </S.Container>
       )}
     </Formik>
   );
