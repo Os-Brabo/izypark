@@ -9,8 +9,8 @@ type Props = {
   onSubmit: (carPlate: string) => void;
 };
 
-type FormHelpers = FormikHelpers<{ carPlate: string }>;
 type FormValues = { carPlate: string };
+type FormHelpers = FormikHelpers<FormValues>;
 export function ReportIncidentForm({ onSubmit }: Props) {
   const initialValues = { carPlate: "" };
   function handleSubmit({ carPlate }: FormValues, { resetForm }: FormHelpers) {
