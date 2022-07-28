@@ -1,47 +1,47 @@
 import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { DrawerContent } from "./DrawerContent";
-import { CreateVehicle } from "../screens/AddVehicle";
-import { Institutions } from "../screens/Institutions";
-import { DetailInstitutions } from "../screens/DetailInstitutions";
-import { Store } from "../screens/Store";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Purchases } from "../screens/Purchases";
-const Stack = createNativeStackNavigator();
+import { Home } from "../screens/Home";
+import { Vehicles } from "../screens/MyVehicles";
+import { Raking } from "../screens/Raking";
+import { StackContent } from "./StackContent";
+import { ReportIncident } from "../screens/ReportIncidents";
+
+const Drawer = createDrawerNavigator();
 
 export function PrivateRoutes() {
   return (
-    <Stack.Navigator initialRouteName="Drawer">
-      <Stack.Screen
-        name="Drawer"
-        component={DrawerContent}
+    <Drawer.Navigator>
+      <Drawer.Screen
+        name="Home"
+        component={Home}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="Vehicles.Create"
-        component={CreateVehicle}
+      <Drawer.Screen
+        name="Vehicles"
+        component={Vehicles}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="Institutions.List"
-        component={Institutions}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Institutions.Detail"
-        // key="Institutions.Detail"
-        component={DetailInstitutions}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Institutions.Store"
-        component={Store}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
+      <Drawer.Screen
         name="Purchases"
         component={Purchases}
+        options={{ title: "Compras", headerShown: false }}
+      />
+      <Drawer.Screen
+        name="Ranking"
+        component={Raking}
         options={{ headerShown: false }}
       />
-    </Stack.Navigator>
+      <Drawer.Screen
+        name="incident"
+        component={ReportIncident}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name="Stack"
+        component={StackContent}
+        options={{ headerShown: false, drawerItemStyle: { height: 0 } }}
+      />
+    </Drawer.Navigator>
   );
 }

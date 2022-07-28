@@ -1,4 +1,5 @@
 import React from "react";
+import { TouchableOpacityProps } from "react-native";
 import styled from "styled-components/native";
 
 export const ButtonContainer = styled.TouchableOpacity`
@@ -17,14 +18,14 @@ export const ButtonText = styled.Text`
   font-family: "RobotoBlack";
 `;
 
-interface Props {
+interface Props extends TouchableOpacityProps {
   label: string;
   onPress: () => void;
 }
 
-export function DefaultButton({ label, onPress }: Props) {
+export function DefaultButton({ label, onPress, ...props }: Props) {
   return (
-    <ButtonContainer onPress={onPress}>
+    <ButtonContainer onPress={onPress} {...props}>
       <ButtonText>{label}</ButtonText>
     </ButtonContainer>
   );

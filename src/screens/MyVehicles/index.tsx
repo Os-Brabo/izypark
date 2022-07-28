@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState, useEffect } from "react";
 import { DefaultButton } from "../../components/Buttons/DefaultButton";
 import { Header } from "../../components/Header";
@@ -14,9 +15,9 @@ type VehicleData = {
 };
 
 export function Vehicles() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   function handleRouteRedirect() {
-    navigation.navigate("Vehicles.Create");
+    navigation.navigate("Stack", { screen: "Vehicles.Create" });
   }
   const { data: vehicles } = useVehicle();
 

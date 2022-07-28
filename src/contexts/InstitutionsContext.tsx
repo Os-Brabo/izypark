@@ -7,6 +7,7 @@ import {
   onSnapshot,
   query,
   setDoc,
+  startAt,
   Unsubscribe,
   where
 } from "firebase/firestore";
@@ -28,7 +29,7 @@ export interface Institution {
   state: string;
   id: string;
 }
-interface FormatedInstitution {
+export interface FormatedInstitution {
   name: string;
   id: string;
   isFavorite: boolean;
@@ -62,6 +63,8 @@ type Props = {
   currentInstitution: CurrentInstitution | null;
   selectInstitution(id: string): Promise<void>;
   handleProductPurchase(id: string): Promise<void>;
+  fetchInstitutions(searchTerm?: string): void;
+  findInstitutions(searchTerm: string): Promise<FormatedInstitution[]>;
 };
 
 export const InstitutionContext = createContext({} as Props);
@@ -89,18 +92,17 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     return true;
   }
 
-  function formatInstitutions() {
-    const formated: FormatedInstitution[] = institutions.map((institution) => {
+  function formatInstitutions(data: Institution[]): FormatedInstitution[] {
+    const formated: FormatedInstitution[] = data.map((institution) => {
       return {
         id: institution.id,
         isFavorite: isFavorite(institution.id),
         name: institution.initials
       };
     });
-
-    setFormatedInstitutions(formated);
+    return formated;
   }
-  function fetchInstitutions() {
+  function fetchInstitutions(searchTerm?: string): void {
     const institutionsRef = collection(firestore, "institutions");
     const q = query(institutionsRef);
     const unsub = onSnapshot(q, (firebaseData) => {
@@ -112,6 +114,16 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
       setInstitutions(data);
     });
     unsubscribe = unsub;
+  }
+
+  async function findInstitutions(
+    searchTerm: string
+  ): Promise<FormatedInstitution[]> {
+    const result = institutions.filter((institution) =>
+      institution.initials.toLowerCase().startsWith(searchTerm.toLowerCase())
+    );
+    console.log(result);
+    return formatInstitutions(result);
   }
 
   async function fetchProducts(institutionId: string) {
@@ -145,8 +157,8 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     await setDoc(productRef, { ...data, quantity: data.quantity - 1 });
   }
 
-  async function registerPurchase(product: Product) {
-    if (!currentInstitution || !user) return;
+  async function registerPurchase(product: Product): Promise<string> {
+    if (!currentInstitution || !user) return "";
     const id = uuidv4();
     const purchasesRef = doc(
       firestore,
@@ -163,14 +175,15 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
       purchasedAt: new Date()
     };
     await setDoc(purchasesRef, purchase);
+    return id;
   }
 
-  async function handleProductPurchase(id: string): Promise<void> {
+  async function handleProductPurchase(prodId: string): Promise<void> {
     if (!currentInstitution || !userData) return;
-    const product = currentInstitution.products.find((p) => p.id === id);
+    const product = currentInstitution.products.find((p) => p.id === prodId);
     if (!product) return;
-    await decreaseProductQuantity(id);
-    await registerPurchase(product);
+    await decreaseProductQuantity(prodId);
+    const id = await registerPurchase(product);
 
     await updateUserData({
       coins: userData.coins - product.price,
@@ -178,6 +191,8 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
         ...userData.boughtProducts,
         {
           ...product,
+          id,
+          productId: prodId,
           boughtAt: new Date(),
           status: "waiting_withdrawal"
         }
@@ -203,8 +218,9 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     return unsubscribe;
   }, []);
   useEffect(() => {
-    formatInstitutions();
-  }, [userData?.favoriteInstitutions]);
+    const formated = formatInstitutions(institutions);
+    setFormatedInstitutions(formated);
+  }, [userData?.favoriteInstitutions, institutions]);
   useEffect(() => {
     if (userData.parkedAt) selectInstitution(userData.parkedAt?.institutionId);
   }, [userData?.parkedAt]);
@@ -214,7 +230,8 @@ export function InstitutionProvider({ children }: PropsWithChildren<{}>) {
     favoriteInstitutions,
     currentInstitution,
     selectInstitution,
-    handleProductPurchase
+    handleProductPurchase,
+    findInstitutions
   };
   return (
     <InstitutionContext.Provider value={value}>

@@ -15,13 +15,15 @@ export function SignUp() {
   const { signUpWithPassword } = useAuth();
   async function onSubmit({
     email,
-    password
+    password,
+    name
   }: {
     email: string;
     password: string;
+    name: string;
   }): Promise<Either<Error, null>> {
     console.log("submiting");
-    return await signUpWithPassword({ email, password });
+    return await signUpWithPassword({ email, password, name });
   }
   return (
     <S.Background>

@@ -22,7 +22,9 @@ import { Either, left, right } from "../utils/Either";
 import { Block } from "./BlocksContext";
 import { Institution, Product } from "./InstitutionsContext";
 
-type UserBoughtProduct = Product & {
+export type UserBoughtProduct = Product & {
+  id: string;
+  productId: string;
   boughtAt: Date;
   status: "withdrawn" | "waiting_withdrawal";
 };
@@ -46,6 +48,7 @@ type UserData = {
 type PasswordSignProps = {
   email: string;
   password: string;
+  name: string;
 };
 
 type AuthContextProps = {
@@ -125,6 +128,11 @@ export function AuthProvider({ children }: ProviderProps) {
     if (data.boughtProducts === undefined) {
       data.boughtProducts = [];
       await updateUserData({ boughtProducts: [] });
+    } else {
+      data.boughtProducts = data.boughtProducts.map((prod) => ({
+        ...prod,
+        boughtAt: (prod.boughtAt as any).toDate()
+      }));
     }
     if (data.savedGaz === undefined) {
       data.savedGaz = 0;
@@ -219,10 +227,13 @@ export function AuthProvider({ children }: ProviderProps) {
   const signUpWithPassword = useCallback(
     async ({
       email,
-      password
+      password,
+      name
     }: PasswordSignProps): Promise<Either<Error, null>> => {
       try {
         await createUserWithEmailAndPassword(auth, email, password);
+        await createUserData();
+        await updateUserData({ name });
         return right(null);
       } catch (err: any) {
         return left(new Error(err.message));

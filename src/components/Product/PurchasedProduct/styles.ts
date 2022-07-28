@@ -2,6 +2,8 @@ import styled from "styled-components/native";
 
 export const ItemContainer = styled.View`
   padding: 10px;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
 `;
 
 export const TextWithStrong = styled.Text<{ textColor?: string }>`

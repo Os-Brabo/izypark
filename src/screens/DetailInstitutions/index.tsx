@@ -93,13 +93,11 @@ export function DetailInstitutions() {
           <Block block={item} handlePark={handleParkingBlockPress} />
         )}
       />
-      <View style={{ flexBasis: "25%" }}>
-        <DefaultButton
-          label="loja da instituição"
-          onPress={() => navigation.navigate("Institutions.Store")}
-        />
-        <DefaultButton label="loja da instituição" onPress={() => {}} />
-      </View>
+      <DefaultButton
+        style={{ marginBottom: 20 }}
+        label="loja da instituição"
+        onPress={() => navigation.navigate("Institutions.Store")}
+      />
 
       <Modal
         animationType="slide"
