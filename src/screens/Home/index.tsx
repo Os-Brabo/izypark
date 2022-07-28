@@ -12,13 +12,11 @@ export function Home() {
   const parkedPlace = userData.parkedAt;
 
   return (
-    <>
+    <S.Container>
+      <Header />
       <S.TopContainer>
-        <Header />
-        <S.CO2Container>
-          <S.DefaultTitle>{economizedGaz}</S.DefaultTitle>
-          <S.CO2Description>Gramas de CO2 economizados</S.CO2Description>
-        </S.CO2Container>
+        <S.DefaultTitle>{economizedGaz}</S.DefaultTitle>
+        <S.CO2Description>Gramas de CO2 economizados</S.CO2Description>
         <S.DefaultTitle>{availableCoins}</S.DefaultTitle>
         <S.AvailableCoins>Moedas Disponíveis</S.AvailableCoins>
       </S.TopContainer>
@@ -29,6 +27,6 @@ export function Home() {
           <ParkedPlace place={parkedPlace} />
         )}
       </S.BottomContainer>
-    </>
+    </S.Container>
   );
 }

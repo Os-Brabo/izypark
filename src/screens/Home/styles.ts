@@ -1,9 +1,12 @@
 import styled from "styled-components/native";
 
+export const Container = styled.View`
+  flex: 1;
+`;
+
 export const TopContainer = styled.View`
   background-color: #3a3a3a;
-  height: 50%;
-  width: 100%;
+  padding: 15px 0;
 `;
 export const DefaultTitle = styled.Text`
   font-size: 50px;
@@ -13,7 +16,8 @@ export const DefaultTitle = styled.Text`
   text-align: center;
 `;
 export const CO2Container = styled.View`
-  width: 100%;
+  /* width: 100%; */
+  background-color: green;
 `;
 export const CO2Description = styled.Text`
   font-size: 24px;
