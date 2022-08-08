@@ -1,12 +1,16 @@
+import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React from "react";
+
+import { BlackTitle } from "../../components/shared/BlackTitle";
 import { DefaultButton } from "../../components/Buttons/DefaultButton";
 import { Header } from "../../components/Header";
-import { BlackTitle } from "../../components/shared/BlackTitle";
 import { Vehicle } from "../../components/Vehicles/Vehicle";
+
 import { useVehicle } from "../../hooks/useVehicle";
+
 import * as S from "./styles";
+
 export type VehicleData = {
   id: string;
   plate: string;
