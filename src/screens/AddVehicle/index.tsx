@@ -14,7 +14,7 @@ import {
 import { useVehicle } from "../../hooks/useVehicle";
 import { useToaster } from "../../hooks/Toaster";
 import { useNavigation } from "@react-navigation/native";
-// import * as S from "";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 const createVehicleSchema = Yup.object().shape({
   plate: Yup.string()
@@ -32,7 +32,7 @@ interface Fields {
 
 export function CreateVehicle() {
   const toast = useToaster();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const { create } = useVehicle();
 
   const initialValues = {
