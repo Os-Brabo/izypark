@@ -12,7 +12,7 @@ export const DefaultTitle = styled.Text`
   font-size: 50px;
   color: #fff;
   font-weight: bold;
-  font-family: "RobotoBlack";
+  font-family: ${({ theme }) => theme.fonts.medium};
   text-align: center;
 `;
 export const CO2Container = styled.View`

@@ -14,6 +14,8 @@ import { Routes } from "./src/routes";
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { ThemeProvider } from "styled-components/native";
+import theme from "./src/global/styles/theme";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCuYO94ZTBUyqetY0Sz759L_Ly0iA7X41I",
@@ -50,9 +52,11 @@ export default function App() {
   }
 
   return (
-    <AppProvider>
-      <Routes />
-      <Toaster />
-    </AppProvider>
+    <ThemeProvider theme={theme}>
+      <AppProvider>
+        <Routes />
+        <Toaster />
+      </AppProvider>
+    </ThemeProvider>
   );
 }
