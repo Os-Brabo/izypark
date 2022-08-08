@@ -13,6 +13,7 @@ interface Props {
   returnTo?: string;
 }
 export function Header({ returnTo }: Props) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigation = useNavigation<NavigationProp<any>>();
   function handleOpenMenu() {
     navigation.dispatch(DrawerActions.openDrawer());
