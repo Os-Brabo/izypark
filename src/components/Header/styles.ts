@@ -7,7 +7,7 @@ export const HeaderContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #3a3a3a;
+  background-color: ${({ theme }) => theme.colors.primary};
 `;
 export const MenuButton = styled.TouchableOpacity`
   margin-left: auto;

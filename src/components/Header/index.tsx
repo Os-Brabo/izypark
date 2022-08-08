@@ -1,5 +1,9 @@
 import React from "react";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import {
+  useNavigation,
+  DrawerActions,
+  NavigationProp
+} from "@react-navigation/native";
 
 import Feather from "@expo/vector-icons/Feather";
 import * as S from "./styles";
@@ -9,7 +13,7 @@ interface Props {
   returnTo?: string;
 }
 export function Header({ returnTo }: Props) {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<any>>();
   function handleOpenMenu() {
     navigation.dispatch(DrawerActions.openDrawer());
   }
@@ -19,7 +23,7 @@ export function Header({ returnTo }: Props) {
       navigation.goBack();
       return;
     }
-    navigation.navigate({ name: returnTo });
+    navigation.navigate(returnTo);
   }
   return (
     <S.HeaderContainer>
