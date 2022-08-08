@@ -25,12 +25,12 @@ export const CO2Description = styled.Text`
   text-align: center;
   max-width: 50%;
   margin: 0 auto 20px;
-  font-family: "RobotoMedium";
+  font-family: ${({ theme }) => theme.fonts.medium};
 `;
 export const AvailableCoins = styled.Text`
   font-size: 24px;
   color: #fff;
-  font-family: "RobotoMedium";
+  font-family: ${({ theme }) => theme.fonts.medium};
   text-align: center;
 `;
 export const BottomContainer = styled.View`
