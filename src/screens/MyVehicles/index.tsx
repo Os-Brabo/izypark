@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import { BlackTitle } from "../../components/shared/BlackTitle";
 import { DefaultButton } from "../../components/Buttons/DefaultButton";
 import { Header } from "../../components/Header";
 import { Vehicle } from "../../components/Vehicles/Vehicle";
@@ -28,7 +27,7 @@ export function Vehicles() {
   return (
     <>
       <Header />
-      <BlackTitle>Meus Veículos</BlackTitle>
+      <S.Title>Meus Veículos</S.Title>
       <S.vehiclesList
         data={vehicles}
         keyExtractor={(item) => item.id}

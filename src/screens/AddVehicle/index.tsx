@@ -41,7 +41,6 @@ export function CreateVehicle() {
     plate: ""
   };
   async function handleSubmit(data: Fields) {
-    console.log("handleSubmit new vehicle");
     const response = await create(data);
     if (response.isLeft()) {
       console.log(response.value);
