@@ -1,10 +1,10 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { collection, getDocs, getFirestore, query } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { Header } from "../../components/Header";
 import { BlackTitle } from "../../components/shared/BlackTitle";
 import { Spacer } from "../../components/shared/Spacer";
-import { useAuth } from "../../hooks/useAuth";
 import { CarbonSavedItem } from "./RankingItem";
 
 interface RankingItem {
@@ -17,28 +17,28 @@ export function Raking() {
   const firestore = getFirestore();
   const [ranking, setRanking] = useState<RankingItem[]>([]);
 
-  async function fetchRanking() {
-    console.log("fetching ranking");
-    const userDataRef = collection(firestore, "usersData");
-    const q = query(userDataRef);
-    const result = await getDocs(q);
-    const rank: RankingItem[] = [];
-    result.forEach((user) => {
-      const item = user.data();
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchRanking() {
+        const userDataRef = collection(firestore, "usersData");
+        const q = query(userDataRef);
+        const result = await getDocs(q);
+        const rank: RankingItem[] = [];
+        result.forEach((user) => {
+          const item = user.data();
 
-      rank.push({
-        id: item.id,
-        amount: item.savedGaz,
-        name: item.name
-      });
-    });
-    rank.sort((a, b) => b.amount - a.amount);
-    setRanking(rank);
-  }
-
-  useEffect(() => {
-    fetchRanking();
-  }, []);
+          rank.push({
+            id: item.id,
+            amount: item.savedGaz,
+            name: item.name
+          });
+        });
+        rank.sort((a, b) => b.amount - a.amount);
+        setRanking(rank);
+      }
+      fetchRanking();
+    }, [])
+  );
 
   return (
     <>

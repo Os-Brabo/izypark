@@ -11,7 +11,9 @@ export const ItemContainer = styled.View<ContainerProps>`
   border-color: ${({ isCurrent }) => (isCurrent ? "#ff9000" : "#eee")};
   border-style: solid;
   border-bottom-width: 2px;
-  padding-bottom: 15px;
+  padding: 10px;
+
+  ${({ isCurrent }) => isCurrent && `background-color: #d3d3d3;`}
 `;
 export const ItemText = styled.Text`
   font-size: 20px;
