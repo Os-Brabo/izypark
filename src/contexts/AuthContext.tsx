@@ -191,7 +191,7 @@ export function AuthProvider({ children }: ProviderProps) {
   }
   async function clearParkedCar(): Promise<Either<Error, null>> {
     if (!userData) return right(null);
-    const savedGaz = userData.savedGaz + 10;
+    const savedGaz = userData.savedGaz + 37.5;
     const coins = userData.coins + 1;
     const userDocRef = doc(firestore, "usersData", userData.id);
     await setDoc(userDocRef, { ...userData, parkedAt: null, savedGaz, coins });
