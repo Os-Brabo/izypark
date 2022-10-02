@@ -15,6 +15,7 @@ import { useVehicle } from "../../hooks/useVehicle";
 import { useToaster } from "../../hooks/Toaster";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Spacer } from "../../components/shared/Spacer";
 
 const createVehicleSchema = Yup.object().shape({
   plate: Yup.string()
@@ -53,6 +54,7 @@ export function CreateVehicle() {
   return (
     <View style={{ flex: 1 }}>
       <Header returnTo="Veículos" />
+      <Spacer height={25} />
       <BlackTitle>Cadastrar um Veículo</BlackTitle>
       <Formik
         onSubmit={handleSubmit}
