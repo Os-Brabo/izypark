@@ -29,6 +29,7 @@ export function Institutions() {
   return (
     <>
       <Header returnTo="Home" />
+      <Spacer height={25} />
       <BlackTitle>Buscar Instituição</BlackTitle>
       <Spacer height={25} />
       <FetchInstitutionsForm onSubmit={fetchInstitutions} />

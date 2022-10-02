@@ -74,13 +74,14 @@ export function DetailInstitutions() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header />
+      <Header returnTo="back" />
+      <Spacer height={25} />
       <BlackTitle>{institution.title}</BlackTitle>
       <BlackTitle>Vagas disponíveis por bloco</BlackTitle>
       <CenterBoldText>
         Após estacionar, selecione o bloco onde parou
       </CenterBoldText>
-      <Spacer height={15} />
+      <Spacer height={25} />
       <FlatList
         data={institution.parkingBlocks}
         style={{

@@ -30,6 +30,7 @@ export function Store() {
   return (
     <>
       <Header returnTo="back" />
+      <Spacer height={25} />
       <BlackTitle>{currentInstitution?.initials} - Loja</BlackTitle>
       <FlatList
         style={{ padding: 15, marginTop: 30 }}

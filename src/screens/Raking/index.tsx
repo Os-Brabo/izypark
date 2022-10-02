@@ -43,7 +43,9 @@ export function Raking() {
   return (
     <>
       <Header returnTo="Home" />
-      <BlackTitle>Ranking de economia de CO2 100 melhores do ano</BlackTitle>
+      <Spacer height={25} />
+      <BlackTitle>Ranking de economia de CO2 - 100 melhores do ano</BlackTitle>
+      <Spacer height={10} />
       <FlatList
         style={{ padding: 20 }}
         data={ranking}
