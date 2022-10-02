@@ -1,15 +1,17 @@
 import React from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 import { Purchases } from "../screens/Purchases";
 import { Home } from "../screens/Home";
 import { Vehicles } from "../screens/MyVehicles";
 import { Raking } from "../screens/Raking";
 import { StackContent } from "./StackContent";
 import { ReportIncident } from "../screens/ReportIncidents";
+import { useAuth } from "../hooks/useAuth";
 
 const Drawer = createDrawerNavigator();
 
 export function PrivateRoutes() {
+  const auth = useAuth();
   return (
     <Drawer.Navigator>
       <Drawer.Screen
@@ -18,12 +20,12 @@ export function PrivateRoutes() {
         options={{ headerShown: false }}
       />
       <Drawer.Screen
-        name="Vehicles"
+        name="Veículos"
         component={Vehicles}
         options={{ headerShown: false }}
       />
       <Drawer.Screen
-        name="Purchases"
+        name="Compras"
         component={Purchases}
         options={{ title: "Compras", headerShown: false }}
       />
@@ -35,6 +37,14 @@ export function PrivateRoutes() {
       <Drawer.Screen
         name="Conflitos"
         component={ReportIncident}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name="Sair"
+        component={() => {
+          auth.signOut();
+          return null;
+        }}
         options={{ headerShown: false }}
       />
       <Drawer.Screen
