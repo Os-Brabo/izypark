@@ -33,7 +33,7 @@ export function PrivateRoutes() {
         options={{ headerShown: false }}
       />
       <Drawer.Screen
-        name="incident"
+        name="Conflitos"
         component={ReportIncident}
         options={{ headerShown: false }}
       />
