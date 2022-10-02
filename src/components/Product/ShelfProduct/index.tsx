@@ -31,7 +31,7 @@ export function ShelfProduct({ data }: Props) {
     }
     await institution.handleProductPurchase(data.id);
     toast.showToaster("Produto comprado! Retire na instituição");
-    navigation.navigate("Purchases");
+    navigation.navigate("Compras");
     setIsLoading(false);
   }
 

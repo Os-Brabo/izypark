@@ -1,5 +1,5 @@
 import React from "react";
-import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Purchases } from "../screens/Purchases";
 import { Home } from "../screens/Home";
 import { Vehicles } from "../screens/MyVehicles";

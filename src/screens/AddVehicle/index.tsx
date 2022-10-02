@@ -47,12 +47,12 @@ export function CreateVehicle() {
       return;
     }
     toast.showToaster("Cadastro realizado com sucesso!", 400);
-    navigation.navigate("Vehicles");
+    navigation.navigate("Veículos");
   }
 
   return (
     <View style={{ flex: 1 }}>
-      <Header returnTo="Vehicles" />
+      <Header returnTo="Veículos" />
       <BlackTitle>Cadastrar um Veículo</BlackTitle>
       <Formik
         onSubmit={handleSubmit}

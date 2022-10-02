@@ -9,6 +9,7 @@ import { Vehicle } from "../../components/Vehicles/Vehicle";
 import { useVehicle } from "../../hooks/useVehicle";
 
 import * as S from "./styles";
+import { Spacer } from "../../components/shared/Spacer";
 
 export type VehicleData = {
   id: string;
@@ -32,13 +33,14 @@ export function Vehicles() {
         data={vehicles}
         keyExtractor={(item) => item.id}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 69 }}
         renderItem={({ item }) => <Vehicle data={item} />}
       />
+      <Spacer flex={1} />
       <DefaultButton
         label="Adicionar novo Veículo"
         onPress={handleRouteRedirect}
       />
+      <Spacer height={40} />
     </>
   );
 }
