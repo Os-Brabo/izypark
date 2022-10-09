@@ -20,6 +20,7 @@
     "date-fns": "^2.28.0",
     "expo": "^45.0.5",
     "expo-auth-session": "~3.6.1",
+    "expo-device": "~4.2.0",
     "expo-font": "~10.1.0",
     "expo-notifications": "~0.15.4",
     "expo-random": "~12.2.0",

@@ -17,6 +17,7 @@ import React, {
   useMemo,
   useState
 } from "react";
+import { useNotifications } from "../hooks/useNotifications";
 
 import { Either, left, right } from "../utils/Either";
 import { Block } from "./BlocksContext";
@@ -43,6 +44,7 @@ type UserData = {
   } | null;
   savedGaz: number;
   name: string;
+  expoPushToken?: string;
 };
 
 type PasswordSignProps = {
@@ -80,6 +82,7 @@ export function AuthProvider({ children }: ProviderProps) {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState<UserData>({} as UserData);
+  const { expoPushToken } = useNotifications();
   const firestore = getFirestore();
 
   async function createUserData() {
@@ -263,6 +266,12 @@ export function AuthProvider({ children }: ProviderProps) {
   const signOut = useCallback(async () => {
     firebaseSignOut(auth);
   }, []);
+
+  useEffect(() => {
+    if (expoPushToken && expoPushToken !== userData.expoPushToken) {
+      updateUserData({ expoPushToken });
+    }
+  }, [expoPushToken]);
 
   const value = useMemo(
     () => ({

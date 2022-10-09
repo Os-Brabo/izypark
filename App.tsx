@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import "react-native-reanimated";
 import * as SplashScreen from "expo-splash-screen";
+import * as Notifications from "expo-notifications";
 import {
   useFonts,
   Roboto_400Regular,
@@ -13,7 +14,6 @@ import { AppProvider } from "./src/hooks";
 import { Routes } from "./src/routes";
 
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { ThemeProvider } from "styled-components/native";
 import theme from "./src/global/styles/theme";
 
@@ -29,6 +29,14 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false
+  })
+});
 
 SplashScreen.preventAutoHideAsync();
 
