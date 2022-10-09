@@ -1,16 +1,48 @@
+import {
+  collection,
+  doc,
+  DocumentData,
+  getDocs,
+  getFirestore,
+  query,
+  setDoc,
+  where
+} from "firebase/firestore";
 import React from "react";
+import { v4 as uuid } from "uuid";
 import { Alert } from "react-native";
 import { Header } from "../../components/Header";
 import { ReportIncidentForm } from "../../components/ReportIncidentForm";
 
 import * as S from "./styles";
+import { useAuth } from "../../hooks/useAuth";
 
 export function ReportIncident() {
-  function handleSubmit() {
-    console.log("submit");
+  const firestore = getFirestore();
+  const { user } = useAuth();
+
+  async function handleSubmit(plate: string) {
+    const q = query(collection(firestore, "cars"), where("plate", "==", plate));
+    const querySnapshot = await getDocs(q);
+    const results: DocumentData[] = [];
+    querySnapshot.forEach((doc) => {
+      results.push(doc.data());
+    });
+    if (!results.length) {
+      return Alert.alert("Placa não encontrada");
+    }
+    await Promise.all(
+      results.map(async (result) => {
+        const id = uuid();
+        await setDoc(doc(firestore, "incidents", id), {
+          fromUserId: user?.uid,
+          toUserId: result.userId
+        });
+      })
+    );
     Alert.alert(
-      "Enviado",
-      "Obrigado por reportar o problema, aguarde alguns minutos até que se resolva"
+      "Incidente reportado",
+      "Enviamos uma notificação para o proprietário do veículo, por favor aguarde"
     );
   }
 
