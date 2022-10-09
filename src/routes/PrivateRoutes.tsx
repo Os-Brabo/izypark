@@ -10,8 +10,13 @@ import { useAuth } from "../hooks/useAuth";
 
 const Drawer = createDrawerNavigator();
 
-export function PrivateRoutes() {
+function SignOut() {
   const auth = useAuth();
+  auth.signOut();
+  return null;
+}
+
+export function PrivateRoutes() {
   return (
     <Drawer.Navigator>
       <Drawer.Screen
@@ -41,10 +46,7 @@ export function PrivateRoutes() {
       />
       <Drawer.Screen
         name="Sair"
-        component={() => {
-          auth.signOut();
-          return null;
-        }}
+        component={SignOut}
         options={{ headerShown: false }}
       />
       <Drawer.Screen
