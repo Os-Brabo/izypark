@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "882850359819",
+    "firebase_url": "https://izipark-5b433-default-rtdb.firebaseio.com",
+    "project_id": "izipark-5b433",
+    "storage_bucket": "izipark-5b433.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882850359819:android:c39745fc6389934bc8b50e",
+        "android_client_info": {
+          "package_name": "com.facens.izypark"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "882850359819-467gdld5g91ar2vlodm29psg9hdd4c5v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOAIqhBpocQp4hemsGNIG9iz_GjfZfHVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "882850359819-467gdld5g91ar2vlodm29psg9hdd4c5v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
