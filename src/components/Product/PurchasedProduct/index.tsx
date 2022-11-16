@@ -38,7 +38,7 @@ export function PurchasedProduct({ data }: Props) {
           <Text style={{ fontWeight: "bold" }}>Status: </Text>
           {data.status === "waiting_withdrawal"
             ? "Aguardando Retirada"
-            : "Retirado"}
+            : "Concluído"}
         </S.TextWithStrong>
       </S.Row>
     </S.ItemContainer>
