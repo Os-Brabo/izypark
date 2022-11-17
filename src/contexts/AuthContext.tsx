@@ -104,17 +104,20 @@ export function AuthProvider({ children }: ProviderProps) {
     }
   }
 
-  async function updateUserData(data: Partial<UserData>) {
-    if (!auth.currentUser || !userData) return;
-    try {
-      const userDocRef = doc(firestore, "usersData", auth.currentUser.uid);
-      const newData = { ...userData, ...data };
-      await setDoc(userDocRef, newData);
-      setUserData(newData);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const updateUserData = useCallback(
+    async (data: Partial<UserData>) => {
+      if (!auth.currentUser || !userData) return;
+      try {
+        const userDocRef = doc(firestore, "usersData", auth.currentUser.uid);
+        const newData = { ...userData, ...data };
+        await setDoc(userDocRef, newData);
+        setUserData(newData);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [userData]
+  );
 
   async function generateUserData() {
     if (!auth.currentUser) return;
@@ -153,6 +156,7 @@ export function AuthProvider({ children }: ProviderProps) {
     async (instituionId: string) => {
       if (!userData) return;
       const newUserData = { ...userData };
+      console.log(newUserData);
       if (userData.favoriteInstitutions.includes(instituionId)) {
         // remove from favorites
         newUserData.favoriteInstitutions = userData.favoriteInstitutions.filter(

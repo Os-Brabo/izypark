@@ -45,6 +45,7 @@ export function DetailInstitutions() {
     console.log("@block confirm park");
     if (!selectedBlock) return;
     await parkBlock(selectedBlock);
+    setModalVisible(false);
     navigation.navigate("Home");
   }
 
@@ -105,7 +106,7 @@ export function DetailInstitutions() {
         transparent={true}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
+          setModalVisible(false);
         }}
         visible={modalVisible}
       >
